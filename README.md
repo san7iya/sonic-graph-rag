@@ -1,28 +1,31 @@
 # Multi-Modal Music Knowledge Graph with LLM-Based Semantic Fusion
 
-A Knowledge Graph where each song node's representation is fused from
-**text** (bio), **image** (album art), and **audio** (30s preview), so a
-query like *"find songs that sound like X but with happier lyrics"* can be
-answered by retrieval across all three modalities together — not by any
-single-modality system, and not from the LLM's own unverified prior
-knowledge (Retrieval-Augmented Generation, grounded in retrieved context
-only).
+Music metadata is fragmented across modalities that are rarely reasoned
+about together: lyrics/bio (text), album art (image), and the audio
+itself (sound). A query like *"find songs that sound like X but with
+happier lyrics"* can't be answered by any single-modality system.
 
-Full spec, milestone plan, and design rationale live in [CLAUDE.md](CLAUDE.md).
-This README covers what's built and how to run it.
+This project builds a Knowledge Graph where each song node's
+representation is fused from text, image, and audio embeddings, and uses
+an LLM with Retrieval-Augmented Generation (RAG) to answer natural-language
+queries grounded in that graph — not in the LLM's own unverified prior
+knowledge.
 
-## Status: Milestone 0 complete (Review 1 vertical slice)
+Built entirely on pretrained, open-source, free-tier components — no
+model training or fine-tuning, no paid APIs.
 
-18 tracks across 6 genres (rock, pop, hip-hop, jazz, classical, reggae),
-each with real bio + album art + audio preview, run through the full
-pipeline: encode → fuse → index → retrieve → generate. No placeholders —
-every vector, similarity score, and LLM answer comes from actually
-running the pipeline.
+## Current status
 
-**Explicit scope for this milestone** (see CLAUDE.md §2 for the full list):
-no fine-tuning of any encoder or the LLM, zero-budget free-tier APIs only,
-15–20 tracks (not the full dataset), baseline normalize-and-concatenate
-fusion (no learned/weighted fusion).
+Proof of concept complete on an 18-track sample spanning 6 genres (rock,
+pop, hip-hop, jazz, classical, reggae): every track's bio, album art, and
+a 30-second audio preview are encoded, fused into one vector, indexed,
+and retrievable through a live RAG query. Nothing here is a placeholder —
+every embedding, similarity score, and generated answer comes from
+actually running the pipeline against real data.
+
+Next up: scaling ingestion to 500–2000 tracks, building out the explicit
+knowledge graph (artist/album/genre relations), and a formal
+precision@k / groundedness evaluation.
 
 ## Setup
 
@@ -36,14 +39,14 @@ copy .env.example .env         # then fill in GEMINI_API_KEY from Google AI Stud
 ## Running it
 
 ```bash
-python -m scripts.run_pipeline                        # full pipeline, one demo query, prints everything
-python -m scripts.answer_query "your question" --top-k 5   # single query, JSON result
-streamlit run app/streamlit_app.py                     # interactive demo UI
+python -m scripts.run_pipeline                             # full pipeline, one demo query, prints everything
+python -m scripts.answer_query "your question" --top-k 5    # single query, JSON result
+streamlit run app/streamlit_app.py                          # interactive demo UI
 ```
 
-`scripts/run_pipeline.py` is the end-to-end script to demo: it prints
-real vector shapes per track, real similarity scores at retrieval time,
-and the real grounded Gemini answer.
+`scripts/run_pipeline.py` is the end-to-end script: it prints real vector
+shapes per track, real similarity scores at retrieval time, and the real
+grounded Gemini answer.
 
 ## How it works
 
@@ -57,41 +60,34 @@ and the real grounded Gemini answer.
 | Retrieval | query → each model's own text tower → top-k | [src/rag/retriever.py](src/rag/retriever.py) |
 | Generation | Gemini 3.6-flash, answer only from retrieved context | [src/rag/llm_client.py](src/rag/llm_client.py), [src/rag/prompt_templates.py](src/rag/prompt_templates.py) |
 
-**Text pipeline in detail** (this is the one most likely to get asked
-about in review): chunk (overlapping word windows) → tokenize (subword,
+**Text pipeline:** chunk (overlapping word windows) → tokenize (subword,
 via MiniLM's own tokenizer) → encode (transformer self-attention →
 contextual per-token vectors) → mean-pool → L2-normalize.
 
-**Why this works — contrastive training, not just an API call**: MiniLM,
-CLIP, and CLAP are each trained with a contrastive objective (similar
-pairs pulled together, dissimilar pairs pushed apart), which is *why*
-cosine similarity between their output vectors tracks semantic
-similarity. CLIP and CLAP specifically align their non-text modality to a
-shared *text* embedding space, which is what lets a plain-text query
-retrieve against real image/audio vectors, not just against bios.
+**Why retrieval works:** MiniLM, CLIP, and CLAP are each trained with a
+contrastive objective (similar pairs pulled together, dissimilar pairs
+pushed apart), which is why cosine similarity between their output
+vectors tracks semantic similarity. CLIP and CLAP specifically align
+their non-text modality to a shared *text* embedding space, which is what
+lets a plain-text query retrieve against real image/audio vectors, not
+just against bios.
 
-**Contextual, not static, embeddings**: these are contextual embeddings —
-the same word gets a different vector depending on surrounding context —
-unlike static Word2Vec/GloVe embeddings, which give one fixed vector per
-word regardless of context. This app needs contextual embeddings because
-a bio's meaning depends on how words combine (e.g. "heavy" in "heavy
-metal" vs. "heavy heart"), not just which words are present.
+**Contextual, not static, embeddings:** the same word gets a different
+vector depending on surrounding context (e.g. "heavy" in "heavy metal" vs.
+"heavy heart"), unlike static Word2Vec/GloVe embeddings, which assign one
+fixed vector per word regardless of context.
 
-## A note on this machine's constraints
+## Design note: subprocess-isolated encoding
 
-This machine's free RAM can't hold MiniLM, CLIP, and CLAP resident in the
-same process at once (confirmed by reproducible crashes). Every encoder
-call — corpus encoding and query encoding alike — runs in its own
-subprocess for exactly this reason (see
-[scripts/encode_modality.py](scripts/encode_modality.py)), and the
-Streamlit demo shells out to a fresh subprocess per query rather than
-keeping models loaded across a session (see
-[scripts/answer_query.py](scripts/answer_query.py)). Under tight memory
-pressure a subprocess can still occasionally crash with a transient
-allocation failure; there's a retry-with-backoff around every subprocess
-call for this reason, and the demo UI surfaces a "retry usually works"
-message if all retries are exhausted. This is a real, observed constraint
-of the current dev machine — not a hypothetical.
+Each encoder loads its own pretrained model (roughly 90MB–600MB). To keep
+peak memory usage bounded rather than holding all three models resident
+at once, encoding and query embedding each run in an isolated subprocess
+([scripts/encode_modality.py](scripts/encode_modality.py)) that exits
+(and releases its memory) as soon as it's done; the Streamlit demo shells
+out to a fresh subprocess per query for the same reason
+([scripts/answer_query.py](scripts/answer_query.py)). A short
+retry-with-backoff wraps each subprocess call to absorb the occasional
+transient allocation failure this pattern can hit under memory pressure.
 
 ## Testing
 
@@ -101,10 +97,16 @@ pytest
 
 Covers the fusion math (correct shape, each modality block independently
 unit-normalized), FAISS retrieval ordering, the retrieval→metadata
-attachment logic, bio chunking, and one real MiniLM inference call.
-Deliberately *not* included in the same test run: CLIP/CLAP encoder
-tests, for the same reason described above — loading multiple heavy
-models in one process is the exact crash this project's
-subprocess-per-encoder pattern exists to avoid. `embed_query()`'s real
-subprocess pipeline is exercised live by `scripts/run_pipeline.py` and
-`scripts/answer_query.py` instead.
+attachment logic, bio chunking, and one real MiniLM inference call. CLIP
+and audio encoder tests are intentionally excluded from this test run, in
+keeping with the subprocess-isolation design above — `embed_query()`'s
+full subprocess pipeline is instead exercised live by
+`scripts/run_pipeline.py` and `scripts/answer_query.py`.
+
+## Scope
+
+No fine-tuning of any encoder or the LLM — every model runs via
+pretrained inference only. Free-tier APIs and open-source models
+throughout, zero budget. Fusion is baseline normalize-and-concatenate; a
+learned/weighted fusion variant is a possible future direction once
+retrieval quality is measured against this baseline.
