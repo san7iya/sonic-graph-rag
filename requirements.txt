@@ -1,0 +1,12 @@
+sentence-transformers
+transformers
+torch
+open_clip_torch
+faiss-cpu
+networkx
+google-genai
+streamlit
+pytest
+numpy
+requests
+python-dotenv
