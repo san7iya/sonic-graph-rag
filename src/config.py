@@ -5,6 +5,7 @@ the same values instead of redefining them, which would let them drift out
 of sync silently.
 """
 
+import os
 from pathlib import Path
 
 # --- Paths ---
@@ -13,6 +14,13 @@ DATA_DIR = ROOT_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 CACHE_DIR = DATA_DIR / "cache"
+
+# The default Hugging Face cache lives under the user's home directory,
+# which on this machine is on a system drive that's nearly full (see
+# CLAUDE.md-adjacent note: C: had ~256MB free). Redirect it into our own
+# cache dir on this project's drive before transformers/sentence-
+# transformers get imported anywhere, since they read this at import time.
+os.environ.setdefault("HF_HOME", str(CACHE_DIR / "huggingface"))
 
 RAW_TEXT_DIR = RAW_DIR / "text"
 RAW_IMAGE_DIR = RAW_DIR / "images"

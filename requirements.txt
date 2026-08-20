@@ -10,3 +10,6 @@ pytest
 numpy
 requests
 python-dotenv
+pillow
+librosa
+imageio-ffmpeg
