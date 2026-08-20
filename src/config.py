@@ -41,7 +41,10 @@ USER_AGENT = f"music-kg-rag/0.1 ( {CONTACT_EMAIL} )"
 TEXT_MODEL_NAME = "all-MiniLM-L6-v2"          # sentence-transformers, 384-dim
 IMAGE_MODEL_NAME = "openai/clip-vit-base-patch32"   # CLIP, 512-dim
 AUDIO_MODEL_NAME = "laion/clap-htsat-unfused"       # CLAP, 512-dim
-LLM_MODEL_NAME = "gemini-2.5-flash"
+LLM_MODEL_NAME = "gemini-3.6-flash"  # gemini-2.5/2.0-flash from the original spec are
+# now blocked for this API key ("no longer available to new users"); this is
+# the exact replacement Google's own API error names. Flagged and confirmed
+# with the user 2026-08-20 rather than swapped silently.
 
 # --- Embedding dimensions (must match the models above) ---
 TEXT_EMBED_DIM = 384

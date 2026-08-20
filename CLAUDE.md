@@ -35,7 +35,7 @@ Music metadata is fragmented across modalities that are rarely reasoned about to
 | Audio embedding | `transformers` CLAP, model `laion/clap-htsat-unfused` | 512-dim, aligned to text space |
 | Knowledge graph | `networkx` (default) | Zero-infra, in-process; export to Neo4j only if graph queries genuinely outgrow it — don't add Neo4j speculatively |
 | Vector index | `faiss-cpu`, `IndexFlatIP` | Inputs must be L2-normalized so inner product = cosine similarity |
-| LLM | Gemini API, package `google-genai` (NOT the older `google-generativeai` — that's being phased out), model `gemini-2.5-flash` or `gemini-2.0-flash` | Free tier; used only for generation, never for embeddings |
+| LLM | Gemini API, package `google-genai` (NOT the older `google-generativeai` — that's being phased out), model `gemini-3.6-flash` | Free tier; used only for generation, never for embeddings. **Updated 2026-08-20**: `gemini-2.5-flash`/`gemini-2.0-flash` from the original spec both now 404 ("no longer available to new users"); Gemini's lineup has moved to 3.x. `gemini-3.6-flash` is the exact replacement Google's own API error names — flagged and confirmed with the user before switching. |
 | Demo UI | `streamlit` | Later milestone only |
 | Testing | `pytest` | One test file per non-trivial module |
 
