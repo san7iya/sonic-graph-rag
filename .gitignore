@@ -6,3 +6,5 @@ data/raw/
 data/cache/
 .pytest_cache/
 .claude/
+CLAUDE.md
+docs/review1_cheatsheet.pdf
