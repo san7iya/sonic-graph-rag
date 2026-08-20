@@ -14,8 +14,20 @@ RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 CACHE_DIR = DATA_DIR / "cache"
 
+RAW_TEXT_DIR = RAW_DIR / "text"
+RAW_IMAGE_DIR = RAW_DIR / "images"
+RAW_AUDIO_DIR = RAW_DIR / "audio"
+
+SEED_TRACKS_CSV = PROCESSED_DIR / "seed_tracks.csv"
+INGESTION_REPORT_CSV = PROCESSED_DIR / "ingestion_report.csv"
+
 FAISS_INDEX_PATH = CACHE_DIR / "faiss_index.bin"
 GRAPH_EXPORT_PATH = CACHE_DIR / "graph.gpickle"
+
+# Contact info required by MusicBrainz's API usage policy for the User-Agent
+# header; requests without one get rate-limited harder or rejected.
+CONTACT_EMAIL = "saniya.goyal2023@vitstudent.ac.in"
+USER_AGENT = f"music-kg-rag/0.1 ( {CONTACT_EMAIL} )"
 
 # --- Model names (pretrained inference only, no fine-tuning) ---
 TEXT_MODEL_NAME = "all-MiniLM-L6-v2"          # sentence-transformers, 384-dim

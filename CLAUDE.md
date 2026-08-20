@@ -109,12 +109,15 @@ I'll get a Gemini API key myself from Google AI Studio — flag clearly if a ste
 
 ## 6. Data Sources
 
+**Milestone 0 note:** GTZAN's 1,000 clips (`blues.00000.au`, etc.) carry only a genre label — no real artist/song identity, and no bundled CSV mapping clips to actual songs (that line below was wrong; flagged and corrected 2026-08-20). For the 15–20 track vertical slice, per-track modality identity matters (art/bio/audio must all be the *same* song), so Milestone 0 sources audio from the iTunes Search API instead (free, no key, real 30s previews keyed by artist/title). GTZAN is deferred to Milestone 1+, where it's used for bulk genre-classification scale and per-song identity is less load-bearing.
+
 | Modality | Source | Access | Notes |
 |---|---|---|---|
-| Audio | GTZAN (1,000 clips, 10 genres, ~1.2GB) | Direct download | Fallback: FMA-small if more entities are needed for graph structure |
+| Audio (Milestone 0) | iTunes Search API | Free public API, no key | Real 30s preview per real song, keyed by artist/title |
+| Audio (Milestone 1+) | GTZAN (1,000 clips, 10 genres, ~1.2GB) | Direct download | Anonymous per-clip identity — fine at bulk/genre scale, not for per-song demos. Fallback: FMA-small if more entities are needed for graph structure |
 | Album art | Cover Art Archive | Free public API | Fallback: MusicBrainz cover art links |
 | Lyrics / bio | Wikipedia API | Free public API | Light cleaning needed (strip markup) |
-| Structured metadata | Dataset-bundled CSV | Local file | Artist, album, genre, track ID — use directly as graph fields, don't re-derive |
+| Structured metadata | Curated manually for M0; GTZAN-bundled labels for M1+ | Local file | Artist, album, genre, track ID — use directly as graph fields, don't re-derive |
 
 ## 7. Build Order (Milestones)
 
