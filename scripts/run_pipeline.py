@@ -55,30 +55,57 @@ def assemble_index(valid_rows: list[dict], bios: dict[str, str]) -> tuple[FusedV
     audio_vecs = dict(np.load(cache_path("audio")))
 
     index = FusedVectorIndex(dim=config.FUSED_EMBED_DIM)
-    track_metadata: dict[str, dict] = {}
     for row in valid_rows:
         track_id = row["track_id"]
         text_vec, image_vec, audio_vec = text_vecs[track_id], image_vecs[track_id], audio_vecs[track_id]
         fused_vec = fusion.fuse_embeddings(text_vec, image_vec, audio_vec)
 
         index.add(track_id, fused_vec)
-        track_metadata[track_id] = {
-            "title": row["title"], "artist": row["artist"], "genre": row["genre"],
-            "album": row["album"], "bio": bios[track_id],
-        }
         print(f"[OK] {track_id}: text{text_vec.shape} image{image_vec.shape} "
               f"audio{audio_vec.shape} -> fused{fused_vec.shape}")
 
-    return index, track_metadata
+    return index, build_track_metadata(valid_rows, bios)
 
 
-def run_query(index: FusedVectorIndex, track_metadata: dict[str, dict], query: str, top_k: int,
-              query_vec: np.ndarray, valid_rows: list[dict]) -> None:
+def build_track_metadata(valid_rows: list[dict], bios: dict[str, str]) -> dict[str, dict]:
+    """track_id -> the fields retrieval attaches to each hit (cheap; always rebuilt)."""
+    return {
+        row["track_id"]: {"title": row["title"], "artist": row["artist"], "genre": row["genre"],
+                          "album": row["album"], "bio": bios[row["track_id"]]}
+        for row in valid_rows
+    }
+
+
+def load_index_and_graph(valid_rows: list[dict], bios: dict[str, str]):
+    """Return (index, graph, track_metadata), reusing the saved index and
+    graph when they are still fresh and rebuilding (then saving) otherwise.
+
+    Why: building the index and the SIMILAR_TO graph from the vector caches
+    on every query is wasted work that grows with the corpus; the saved
+    copies are validated by src/indexing/store.py before being trusted.
+    """
+    from src.graph.build_graph import build_graph_with_similarity
+    from src.indexing import store
+
+    track_metadata = build_track_metadata(valid_rows, bios)
+    cached = store.load_cached([r["track_id"] for r in valid_rows])
+    if cached is not None:
+        index, graph = cached
+        print(f"[cache] loaded saved index and graph ({len(index.track_ids)} tracks)")
+        return index, graph, track_metadata
+
+    index, _ = assemble_index(valid_rows, bios)
+    graph = build_graph_with_similarity(valid_rows, index)
+    store.save_cached(index, graph)
+    print(f"[cache] built and saved index and graph ({len(index.track_ids)} tracks)")
+    return index, graph, track_metadata
+
+
+def run_query(index: FusedVectorIndex, graph, track_metadata: dict[str, dict], query: str, top_k: int,
+              query_vec: np.ndarray) -> None:
     from src.rag import llm_client, prompt_templates, retriever
 
     print(f"\n=== Query: {query!r} ===")
-    from src.graph.build_graph import build_graph_with_similarity
-    graph = build_graph_with_similarity(valid_rows, index)
     hits = retriever.retrieve(query, index, track_metadata, top_k, query_vec=query_vec, graph=graph)
     for i, hit in enumerate(hits, start=1):
         print(f"  [{i}] {hit['title']} — {hit['artist']} (similarity={hit['similarity']:.4f})")
@@ -106,7 +133,7 @@ if __name__ == "__main__":
     from src.rag import retriever
     query_vec = retriever.embed_query(query_text)
 
-    index, track_metadata = assemble_index(valid_rows, bios)
+    index, graph, track_metadata = load_index_and_graph(valid_rows, bios)
     print(f"\nIndexed {len(track_metadata)} tracks.")
 
-    run_query(index, track_metadata, query_text, top_k=5, query_vec=query_vec, valid_rows=valid_rows)
+    run_query(index, graph, track_metadata, query_text, top_k=5, query_vec=query_vec)

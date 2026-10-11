@@ -45,3 +45,40 @@ def test_flags_invented_year_and_name():
 def test_sentence_starter_words_are_not_flagged():
     from src.evaluation.groundedness_check import unsupported_specifics
     assert unsupported_specifics("According to the context, it is reggae.", CONTEXT) == []
+
+
+def test_numbers_match_spelled_out_forms():
+    from src.evaluation.groundedness_check import number_in_words, unsupported_specifics
+    assert number_in_words(41) == "forty one" and number_in_words(11) == "eleven" and number_in_words(300) == "three hundred"
+    ctx = "It spent forty-one weeks in the Top 10 and is certified eleven times Platinum."
+    assert unsupported_specifics("It spent 41 weeks and is 11x Platinum.", ctx) == []
+    assert unsupported_specifics("It spent 42 weeks.", ctx) == ["42"]
+
+
+def test_titles_not_in_context_counts_graph_facts_as_context():
+    from src.evaluation.groundedness_check import titles_not_in_context
+    ctx = '[1] "Song A" by X\nGraph facts: other songs by this artist: Song B'
+    catalog = ["Song A", "Song B", "Song C"]
+    assert titles_not_in_context("Song B and Song C are similar.", ctx, catalog) == ["Song C"]
+
+
+def test_bold_labels_and_sentence_openers_are_not_flagged_as_names():
+    from src.evaluation.groundedness_check import unsupported_specifics
+    ctx = "Bob Marley recorded reggae songs in Kingston."
+    answer = "* **Solo Innovation:** Bob Marley recorded reggae.\nAdditionally, he worked in Kingston. Because of this."
+    assert unsupported_specifics(answer, ctx) == []
+
+
+def test_real_unsupported_name_in_a_sentence_is_still_flagged():
+    from src.evaluation.groundedness_check import unsupported_specifics
+    ctx = "Bob Marley recorded reggae songs in Kingston."
+    assert "Peter Tosh" in unsupported_specifics("He recorded with Peter Tosh in Kingston.", ctx)
+    assert "Jamaica" in unsupported_specifics("Born in Jamaica, Bob Marley recorded reggae.", ctx)
+
+
+def test_one_word_titles_only_count_when_quoted():
+    from src.evaluation.groundedness_check import titles_not_in_context
+    ctx = "Some other context"
+    assert titles_not_in_context("It includes one piano album.", ctx, ["One"]) == []
+    assert titles_not_in_context('It includes "One" by Metallica.', ctx, ["One"]) == ["One"]
+    assert titles_not_in_context("Listen to Billie Jean now.", ctx, ["Billie Jean"]) == ["Billie Jean"]

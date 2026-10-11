@@ -21,7 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.run_pipeline import assemble_index, valid_tracks_with_bios
+from scripts.run_pipeline import load_index_and_graph, valid_tracks_with_bios
 
 RESULT_MARKER = "###RESULT_JSON###"
 
@@ -38,11 +38,9 @@ if __name__ == "__main__":
     from src.rag import retriever
     query_vec = retriever.embed_query(args.query)
 
-    index, track_metadata = assemble_index(valid_rows, bios)
+    index, graph, track_metadata = load_index_and_graph(valid_rows, bios)
 
     from src.rag import llm_client, prompt_templates
-    from src.graph.build_graph import build_graph_with_similarity
-    graph = build_graph_with_similarity(valid_rows, index)
     hits = retriever.retrieve(args.query, index, track_metadata, args.top_k, query_vec=query_vec, graph=graph)
     prompt = prompt_templates.build_rag_prompt(args.query, hits)
     answer = llm_client.generate_answer(prompt)

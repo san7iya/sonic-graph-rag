@@ -24,7 +24,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src import config
-from src.ingestion.artist_match import same_primary_artist
+from src.ingestion.artist_match import is_credited_artist
 
 ITUNES_SEARCH_URL = "https://itunes.apple.com/search"
 ARTIST_SEEDS_JSON = config.PROCESSED_DIR / "artist_seeds.json"
@@ -76,7 +76,7 @@ def songs_for_artist(artist: str, genre: str) -> list[dict]:
         if genre == "classical":
             if name_key.split()[-1] not in haystack:
                 continue
-        elif not same_primary_artist(artist, r["artistName"]):
+        elif not is_credited_artist(artist, r["artistName"]):
             continue
         album = r.get("collectionName", "")
         if is_alternate_version(r["trackName"], album):

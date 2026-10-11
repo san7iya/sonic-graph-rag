@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src import config
 from scripts.encode_modality import cache_path, run_encoder_subprocess
 from scripts.run_weight_sweep import weight_grid
-from src.evaluation.bootstrap import fmt_ci
+from src.evaluation.bootstrap import fmt_ci, paired_diff_ci
 from src.evaluation.precision_at_k import precision_at_k, reciprocal_rank
 from src.preprocessing.records import load_valid_tracks
 
@@ -94,7 +94,13 @@ if __name__ == "__main__":
     grid = weight_grid()
     grid_p = np.stack([per_query(w)[0] for w in grid])           # (grid, queries)
     best = int(grid_p.mean(axis=1).argmax())
-    held_out = [grid_p[int(np.delete(grid_p, q, axis=1).mean(axis=1).argmax()), q] for q in range(len(queries))]
+    # Leave-one-GENRE-out: the three phrasings of a genre are near-duplicates, so leaving out
+    # only one query would still let its siblings help choose the weights it is scored with.
+    held_out = []
+    for q in range(len(queries)):
+        keep = [i for i, g in enumerate(query_genres) if g != query_genres[q]]
+        held_out.append(grid_p[int(grid_p[:, keep].mean(axis=1).argmax()), q])
+    held_diff = paired_diff_ci(held_out, results["fused (equal weights)"][0])
 
     per_genre_lines = []
     for g in GENRE_QUERIES:
@@ -115,7 +121,9 @@ if __name__ == "__main__":
               "|---|" + "---|" * len(systems)] + per_genre_lines
     lines += ["", "## Weighted fusion (weights text, image, audio)", "",
               f"- Best grid point in-sample: {tuple(round(x, 2) for x in grid[best])} -> {grid_p[best].mean():.3f} (optimistic)",
-              f"- Leave-one-query-out estimate: {np.mean(held_out):.3f}",
+              f"- Leave-one-genre-out estimate: {np.mean(held_out):.3f}",
+              f"- Leave-one-genre-out minus equal weights (paired): {held_diff[0]:+.3f} [{held_diff[1]:+.3f}, {held_diff[2]:+.3f}]"
+              + (" (interval excludes 0)" if held_diff[1] > 0 or held_diff[2] < 0 else " (interval includes 0: not a reliable gain)"),
               f"- Equal-weight baseline: {results['fused (equal weights)'][0].mean():.3f}", "",
               "## Per-modality cosine scale (mean / std)", "", "| Modality | mean | std |", "|---|---|---|"]
     lines += [f"| {m} | {spread[m][0]:.3f} | {spread[m][1]:.3f} |" for m in MODALITIES]

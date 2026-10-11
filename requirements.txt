@@ -1,16 +1,18 @@
-sentence-transformers
-transformers
-torch
-open_clip_torch
-faiss-cpu
-networkx
-google-genai
-streamlit
-pytest
-numpy
-requests
-python-dotenv
-pillow
-librosa
-imageio-ffmpeg
-httpx
+# Direct dependencies, pinned to the versions this project was developed and tested with
+# (Python 3.11, Windows). requirements-lock.txt holds the full resolved environment.
+sentence-transformers==6.0.0
+transformers==5.15.1
+torch==2.13.0
+open_clip_torch==3.3.0
+faiss-cpu==1.15.0
+networkx==3.6.1
+google-genai==2.19.0
+streamlit==1.62.0
+pytest==9.1.1
+numpy==2.4.6
+requests==2.34.2
+python-dotenv==1.2.3
+pillow==12.3.0
+librosa==0.11.0
+imageio-ffmpeg==0.6.0
+httpx==0.28.1

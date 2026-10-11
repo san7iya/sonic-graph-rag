@@ -8,6 +8,9 @@ does an exact (not approximate) search — fine at 15-2000 nodes, where
 approximate indexes would only add complexity with no speed benefit.
 """
 
+import json
+from pathlib import Path
+
 import faiss
 import numpy as np
 
@@ -41,3 +44,24 @@ class FusedVectorIndex:
                 continue
             results.append((self.track_ids[idx], float(score)))
         return results
+
+
+    def vectors(self) -> np.ndarray:
+        """All stored vectors, row i belonging to self.track_ids[i]."""
+        return self.index.reconstruct_n(0, self.index.ntotal)
+
+    def save(self, path: Path) -> None:
+        """Write the FAISS index to `path` and the row -> track_id mapping
+        next to it (FAISS itself stores only the vectors, not our ids).
+        """
+        faiss.write_index(self.index, str(path))
+        path.with_suffix(".ids.json").write_text(json.dumps(self.track_ids), encoding="utf-8")
+
+    @classmethod
+    def load(cls, path: Path) -> "FusedVectorIndex":
+        """Read back an index written by save()."""
+        index = faiss.read_index(str(path))
+        loaded = cls(dim=index.d)
+        loaded.index = index
+        loaded.track_ids = json.loads(path.with_suffix(".ids.json").read_text(encoding="utf-8"))
+        return loaded

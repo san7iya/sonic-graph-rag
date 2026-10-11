@@ -1,30 +1,35 @@
 """Decide whether an iTunes result really belongs to the intended artist.
 
 The first catalogue build used a substring test, so searching "Nas" also
-accepted Lil Nas X, and "50 Cent" accepted a Jeremih song that merely
-features him. Comparing the *primary* artist of each side (the first name
-before "feat.", "&", "and", ",", "x", "with") fixes both while still letting
-"Bob Marley & The Wailers" or "Toots & The Maytals" match their seeds.
+accepted Lil Nas X's songs, and "Culture" accepted Culture Club. The fix is
+to split the iTunes credit into its individual credited artists (on
+"feat.", "&", "and", ",", "x", "with") and require the intended artist to
+equal one of them exactly. Collaborations still count ("Stan Getz & Bill
+Evans" is a credited Bill Evans track; "Toots & The Maytals" matches the
+seed "Toots and the Maytals") but near-miss names do not.
 """
 
 import re
 
-_SPLIT = re.compile(r"\s+(?:feat\.?|ft\.?|featuring|with|&|and|x|,)\s+|\s*,\s*", flags=re.IGNORECASE)
+_SPLIT = re.compile(r"\s+(?:feat\.?|ft\.?|featuring|with|vs\.?|&|and|x|,)\s+|\s*,\s*", flags=re.IGNORECASE)
 
 
 def _normalize(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", name.lower().replace("&", " and ")).strip()
 
 
-def primary_artist(name: str) -> str:
-    """First credited artist of a credit string, normalised for comparison.
+def credited_artists(credit: str) -> list[str]:
+    """Normalised individual artists in a credit string.
 
-    "Jeremih feat. 50 Cent" -> "jeremih"; "Toots & The Maytals" -> "toots";
-    "Lil Nas X" -> "lil nas x" (the standalone "x" needs spaces on both sides,
-    so a trailing "X" in a name is not treated as a separator).
+    "Jeremih feat. 50 Cent" -> ["jeremih", "50 cent"]. A standalone "x"
+    needs whitespace on both sides, so the trailing X of "Lil Nas X" is not
+    treated as a separator.
     """
-    return _normalize(_SPLIT.split(name.strip(), maxsplit=1)[0])
+    return [_normalize(part) for part in _SPLIT.split(credit.strip()) if _normalize(part)]
 
 
-def same_primary_artist(seed_artist: str, itunes_artist: str) -> bool:
-    return primary_artist(seed_artist) == primary_artist(itunes_artist)
+def is_credited_artist(seed_artist: str, itunes_credit: str) -> bool:
+    """True if the seed artist (its first-named artist) is one of the artists
+    credited on the iTunes result."""
+    seed = credited_artists(seed_artist)
+    return bool(seed) and seed[0] in credited_artists(itunes_credit)

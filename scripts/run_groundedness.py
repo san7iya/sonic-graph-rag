@@ -46,17 +46,15 @@ def generate_with_retry(prompt: str, attempts: int = 4, model: str | None = None
 
 
 if __name__ == "__main__":
-    from scripts.run_pipeline import assemble_index, valid_tracks_with_bios
+    from scripts.run_pipeline import load_index_and_graph, valid_tracks_with_bios
 
     from src.embeddings import fusion
-    from src.evaluation.groundedness_check import judge_claims, unretrieved_titles_mentioned, unsupported_specifics
-    from src.graph.build_graph import build_graph_with_similarity
+    from src.evaluation.groundedness_check import judge_claims, titles_not_in_context, unsupported_specifics
     from src.rag import prompt_templates, retriever
 
     eval_set = json.loads(EVAL_QUERIES_JSON.read_text(encoding="utf-8"))
     valid_rows, bios = valid_tracks_with_bios()
-    index, track_metadata = assemble_index(valid_rows, bios)
-    graph = build_graph_with_similarity(valid_rows, index)
+    index, graph, track_metadata = load_index_and_graph(valid_rows, bios)
     catalog_titles = [m["title"] for m in track_metadata.values()]
     qvecs = {m: dict(np.load(eval_query_cache_path(m))) for m in MODALITIES}
 
@@ -109,9 +107,10 @@ if __name__ == "__main__":
         rec = progress[entry["query"]]
         qv = fusion.fuse_embeddings(*(unit(qvecs[m][f"q{i}"]) for m in MODALITIES))
         hits = retriever.retrieve(entry["query"], index, track_metadata, TOP_K, query_vec=qv, graph=graph)
-        leaked = unretrieved_titles_mentioned(rec["answer"], [h["title"] for h in hits], catalog_titles)
+        context_text = prompt_templates.build_context_block(hits)
+        leaked = titles_not_in_context(rec["answer"], context_text, catalog_titles)
         leak_count += bool(leaked)
-        specifics = unsupported_specifics(rec["answer"], prompt_templates.build_context_block(hits))
+        specifics = unsupported_specifics(rec["answer"], context_text)
         specifics_count += bool(specifics)
         answer_seconds.append(rec["answer_seconds"])
         if "claims" in rec:
@@ -131,7 +130,7 @@ if __name__ == "__main__":
              f"`{config.LLM_MODEL_NAME}`. Claims judged by `{config.JUDGE_MODEL_NAME}` (see caveat).", "",
              f"- Claims supported by retrieved context: **{total_supported}/{total_claims}** "
              f"({100 * total_supported / max(total_claims, 1):.1f}%)",
-             f"- Answers naming a catalogue song that was not retrieved: **{leak_count}/{len(eval_set)}**",
+             f"- Answers naming a catalogue song that appears nowhere in the context: **{leak_count}/{len(eval_set)}**",
              f"- Answers containing a number or name absent from the context: **{specifics_count}/{len(eval_set)}**",
              f"- Judge replies that failed to parse: {judge_failures}",
              f"- Gemini answer latency: {np.mean(answer_seconds):.1f}s mean "

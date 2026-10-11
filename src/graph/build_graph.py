@@ -54,16 +54,28 @@ def add_similarity_edges(graph: nx.DiGraph, track_ids: list[str], fused_vectors:
     so the evidence strength travels with the edge. Edges are directed
     (A's top-k need not include B), which matches how kNN behaves.
     """
-    sims = fused_vectors @ fused_vectors.T
-    np.fill_diagonal(sims, -np.inf)
+    import faiss
+
+    vectors = np.ascontiguousarray(fused_vectors, dtype=np.float32)
     k = min(k, len(track_ids) - 1)
+    # A FAISS search returns only k+1 neighbours per song, so memory stays O(N*k).
+    # The old version built the full N x N similarity matrix (about 10 GB at 50,000 songs).
+    searcher = faiss.IndexFlatIP(vectors.shape[1])
+    searcher.add(vectors)
+    scores, neighbors = searcher.search(vectors, k + 1)
     added = 0
     for i, track_id in enumerate(track_ids):
-        for j in np.argsort(-sims[i])[:k]:
+        taken = 0
+        for score, j in zip(scores[i], neighbors[i]):
+            if j == i or j == -1:      # a song is not its own neighbour (self may not rank first on ties)
+                continue
             graph.add_edge(schema.node_id(schema.SONG, track_id),
                            schema.node_id(schema.SONG, track_ids[j]),
-                           relation=schema.SIMILAR_TO, weight=float(sims[i, j]))
+                           relation=schema.SIMILAR_TO, weight=float(score))
             added += 1
+            taken += 1
+            if taken == k:
+                break
     return added
 
 
@@ -75,7 +87,7 @@ def build_graph_with_similarity(track_rows: list[dict], index, k: int = 3) -> nx
     for tracks that are in both the rows and the index.
     """
     graph = build_graph(track_rows)
-    all_vectors = index.index.reconstruct_n(0, index.index.ntotal)
+    all_vectors = index.vectors()
     wanted = {r["track_id"] for r in track_rows}
     keep = [i for i, t in enumerate(index.track_ids) if t in wanted]
     add_similarity_edges(graph, [index.track_ids[i] for i in keep], all_vectors[keep], k)

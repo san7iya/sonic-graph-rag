@@ -71,7 +71,8 @@ CHUNK_OVERLAP_RATIO = 0.175  # midpoint of the 15-20% spec
 # distinct text, at the cost of making name-lookup queries easier by
 # construction. Switched on at the user's request 2026-10-11; set False and
 # rerun preprocess + `encode_modality text` to compare.
-PREPEND_METADATA_TO_BIO = True
+# Environment override (PREPEND_METADATA_TO_BIO=0) lets the on/off comparison run without editing this file.
+PREPEND_METADATA_TO_BIO = os.environ.get("PREPEND_METADATA_TO_BIO", "1") != "0"
 
 # --- Retrieval ---
 DEFAULT_TOP_K = 5

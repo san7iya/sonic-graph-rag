@@ -75,11 +75,61 @@ def judge_claims(answer: str, context: str, generate) -> list[dict]:
 _NOT_NAMES = {"the", "a", "an", "this", "that", "these", "those", "it", "its", "based", "according", "both",
               "however", "also", "while", "for", "in", "on", "of", "and", "but", "as", "from", "context",
               "answer", "yes", "no", "retrieved", "song", "songs", "track", "tracks", "genre", "album", "bio",
-              "graph", "similar", "other", "one", "two", "three", "if", "there", "here", "to", "with", "by"}
+              "graph", "similar", "other", "one", "two", "three", "if", "there", "here", "to", "with", "by",
+              "none", "note", "additionally", "additional", "because"}
 
 
 def _normalize(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+
+
+_ONES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+         "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"]
+_TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
+
+
+def number_in_words(n: int) -> str:
+    """English words for 0..999 ("41" -> "forty one"), hyphens as spaces so it
+    matches normalised text. Larger numbers return "" (checked as digits only).
+    """
+    if n < 20:
+        return _ONES[n]
+    if n < 100:
+        return _TENS[n // 10] + (" " + _ONES[n % 10] if n % 10 else "")
+    if n < 1000:
+        return _ONES[n // 100] + " hundred" + (" " + number_in_words(n % 100) if n % 100 else "")
+    return ""
+
+
+def titles_not_in_context(answer: str, context: str, catalog_titles: list[str]) -> list[str]:
+    """Catalogue titles the answer names that appear nowhere in the context.
+
+    The context deliberately contains more than the top-k tracks (graph facts
+    list the artist's other songs, genre examples and similar songs), so a
+    song named from those lines is grounded. Only a title absent from the
+    entire context text is a real leak of outside knowledge.
+    """
+    context_lower = context.lower()
+    answer_lower = answer.lower()
+    leaked = []
+    for title in catalog_titles:
+        t = title.lower()
+        if t in context_lower:
+            continue
+        if " " not in t.strip():
+            # A one-word title ("One", "Spring") is also an ordinary word, so only a
+            # quoted mention counts as naming the song.
+            pattern = r"[\"“‘']" + re.escape(t) + r"[\"”’']"
+        else:
+            pattern = r"(?<!\w)" + re.escape(t) + r"(?!\w)"
+        if re.search(pattern, answer_lower):
+            leaked.append(title)
+    return leaked
+
+
+_BOLD_LABEL = re.compile(r"(?m)^[\s>*\-\u2022\d.)]*\*\*([^*\n\"\u201c]*)\*\*")
+_NAME_RUN = (r"[A-Z][\w'\u2019.-]*(?:\s+(?:of|the|and|&|de|van|von)\s+[A-Z][\w'\u2019.-]*"
+             r"|\s+[A-Z][\w'\u2019.-]*)*")
 
 
 def unsupported_specifics(answer: str, context: str) -> list[str]:
@@ -94,20 +144,38 @@ def unsupported_specifics(answer: str, context: str) -> list[str]:
     so a clean result does not prove groundedness; a hit is a real red flag
     worth reading.
 
-    Names are runs of capitalised words (joined by 'of', '&', 'the', 'and'
-    only inside a run); a run counts as supported if the whole phrase, or
-    every word of it, occurs in the context. Sentence-starting filler words
-    are ignored.
+    Numbers match as digits or as English words ("41" is supported by
+    "forty-one"). Names are runs of capitalised words (joined by 'of', '&',
+    'the', 'and' only inside a run); a run counts as supported if the whole
+    phrase, or every word of it, occurs in the context. To avoid flagging
+    formatting, bold labels at the start of a bullet ("**Solo Innovation:**")
+    are dropped, and a capitalised first word of a sentence is not treated
+    as part of a name (a lone one is skipped; in a longer run it is dropped).
     """
     haystack = " " + _normalize(context) + " "
     found = []
 
     for number in dict.fromkeys(re.findall(r"\b\d[\d,.]*\d\b|\b\d\b", answer)):
-        if f" {_normalize(number)} " not in haystack:
-            found.append(number)
+        digits = number.replace(",", "")
+        spelled = number_in_words(int(digits)) if digits.isdigit() else ""
+        if f" {_normalize(number)} " in haystack or (spelled and f" {spelled} " in haystack):
+            continue
+        found.append(number)
 
-    run = r"[A-Z][\w'’.-]*(?:\s+(?:of|the|and|&|de|van|von)\s+[A-Z][\w'’.-]*|\s+[A-Z][\w'’.-]*)*"
-    for match in dict.fromkeys(m.rstrip(".,;:'-") for m in re.findall(run, answer)):
+    text = _BOLD_LABEL.sub(" ", answer).replace("*", " ").replace("_", " ")
+    names = []
+    for m in re.finditer(_NAME_RUN, text):
+        run = m.group().rstrip(".,;:'-")
+        prefix = text[:m.start()].rstrip(" \t>-\u2022")
+        sentence_initial = prefix == "" or prefix[-1] in ".!?:\n"
+        words = run.split()
+        if sentence_initial:
+            if len(words) == 1:
+                continue
+            words = words[1:]
+        names.append(" ".join(words))
+
+    for match in dict.fromkeys(names):
         words = [w for w in re.split(r"\s+", match) if _normalize(w) not in _NOT_NAMES]
         while words and _normalize(words[0]) in _NOT_NAMES:
             words = words[1:]

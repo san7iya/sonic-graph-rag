@@ -65,3 +65,32 @@ Mean per-modality cosine of the fused top-1 hit: text=0.380, image=0.252, audio=
 Baseline MRR 0.929.
 
 Reading it: a real improvement must show up in the leave-one-query-out row. If that row is not clearly above the baseline, weighting is not justified on this data; with this few queries differences under about 0.05 are noise.
+
+## Groundedness
+
+14 queries, top-3 retrieval with graph expansion, answers from `gemini-3.6-flash`. Claims judged by `gemini-3.5-flash-lite` (see caveat).
+
+- Claims supported by retrieved context: **75/75** (100.0%)
+- Answers naming a catalogue song that appears nowhere in the context: **0/14**
+- Answers containing a number or name absent from the context: **0/14**
+- Judge replies that failed to parse: 0
+- Gemini answer latency: 8.3s mean (min 4.5s, max 16.8s, includes retries)
+
+Caveat: the claim judge is also an LLM from the same vendor, so its verdicts are an estimate; the leaked-title and number/name checks are the objective ones.
+
+| Query | supported claims | leaked titles | numbers/names not in context | unsupported claims |
+|---|---|---|---|---|
+| reggae music with a laid-back island rhythm | 4/4 | - | - | - |
+| classical orchestral music | 11/11 | - | - | - |
+| jazz improvisation | 3/3 | - | - | - |
+| rap with lyrics about struggle and ambition | 1/1 | - | - | - |
+| guitar-driven rock | 7/7 | - | - | - |
+| catchy mainstream pop hit | 17/17 | - | - | - |
+| an uplifting, optimistic song about hope | 4/4 | - | - | - |
+| grunge anthem of teenage angst | 1/1 | - | - | - |
+| songs by Bob Marley | 2/2 | - | - | - |
+| calm instrumental music with no vocals | 9/9 | - | - | - |
+| 1980s pop star | 3/3 | - | - | - |
+| music by a composer from the eighteenth or nineteenth century | 5/5 | - | - | - |
+| Jamaican music | 8/8 | - | - | - |
+| rock song with operatic vocals and multiple sections | 0/0 | - | - | - |

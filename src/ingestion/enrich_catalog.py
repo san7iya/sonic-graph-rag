@@ -20,7 +20,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src import config
-from src.ingestion.artist_match import same_primary_artist
+from src.ingestion.artist_match import is_credited_artist
 from src.ingestion.build_catalog import ITUNES_SEARCH_URL, normalize_title
 
 OUT_CSV = config.PROCESSED_DIR / "catalog_extra.csv"
@@ -64,7 +64,7 @@ if __name__ == "__main__":
             candidates = by_title.get(normalize_title(t["title"]), [])
             # Prefer a result by the intended artist; fall back to any same-title result so a
             # wrong-artist match is *recorded* (artist_ok=no) rather than hidden.
-            right = [c for c in candidates if same_primary_artist(t["artist"], c["artistName"])]
+            right = [c for c in candidates if is_credited_artist(t["artist"], c["artistName"])]
             hit = (right or candidates or [None])[0]
             if hit is None:
                 artist_ok = "na"

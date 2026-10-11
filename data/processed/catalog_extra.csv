@@ -1,0 +1,548 @@
+track_id,itunes_genre,release_year,itunes_artist,artist_ok,matched
+50_cent_candy_shop_feat_olivia,Hip-Hop/Rap,2005,50 Cent,yes,yes
+50_cent_just_a_lil_bit,Hip-Hop/Rap,2005,50 Cent,yes,yes
+50_cent_disco_inferno,Hip-Hop/Rap,2004,50 Cent,yes,yes
+50_cent_down_on_me_feat_50_cent,R&B/Soul,2010,Jeremih & 50 Cent,yes,yes
+a_tribe_called_quest_can_i_kick_it,Hip-Hop/Rap,1990,A Tribe Called Quest,yes,yes
+a_tribe_called_quest_electric_relaxation,Hip-Hop/Rap,1993,A Tribe Called Quest,yes,yes
+a_tribe_called_quest_lyrics_to_go,Rap,1993,A Tribe Called Quest,yes,yes
+a_tribe_called_quest_steve_biko_stir_it_up,Hip-Hop/Rap,1993,A Tribe Called Quest,yes,yes
+abba_dancing_queen,Pop,1976,ABBA,yes,yes
+abba_gimme_gimme_gimme_a_man_after_midnight,Pop,1979,ABBA,yes,yes
+abba_the_winner_takes_it_all,Pop,1980,ABBA,yes,yes
+abba_take_a_chance_on_me,Pop,1977,ABBA,yes,yes
+ac_dc_thunderstruck,Hard Rock,1990,AC/DC,yes,yes
+ac_dc_back_in_black,Hard Rock,1980,AC/DC,yes,yes
+ac_dc_highway_to_hell,Hard Rock,1979,AC/DC,yes,yes
+ac_dc_t_n_t,Hard Rock,1975,AC/DC,yes,yes
+adele_someone_like_you,Pop,2011,Adele,yes,yes
+adele_set_fire_to_the_rain,Pop,2011,Adele,yes,yes
+adele_rolling_in_the_deep,Pop,2010,Adele,yes,yes
+adele_easy_on_me,Pop,2021,Adele,yes,yes
+aerosmith_dream_on,Hard Rock,1973,Aerosmith,yes,yes
+aerosmith_sweet_emotion,Rock,1975,Aerosmith,yes,yes
+aerosmith_i_don_t_want_to_miss_a_thing,Soundtrack,1998,Aerosmith,yes,yes
+aerosmith_walk_this_way,Rock,1975,Aerosmith,yes,yes
+vivaldi_spring,,,,na,no
+ariana_grande_hate_that_i_made_you_love_me,Pop,2026,Ariana Grande,yes,yes
+ariana_grande_love_me_harder,Pop,2014,Ariana Grande & The Weeknd,yes,yes
+ariana_grande_the_way_feat_mac_miller,Pop,2013,Ariana Grande,yes,yes
+ariana_grande_into_you,Pop,2016,Ariana Grande,yes,yes
+art_blakey_a_night_in_tunisia,Jazz,1960,Art Blakey,yes,yes
+art_blakey_whisper_not,Jazz,1959,Art Blakey,yes,yes
+art_blakey_caravan,Jazz,1962,Art Blakey,yes,yes
+art_blakey_weird_o,Jazz,1956,Art Blakey,yes,yes
+bach_bach_air_on_g_string,Instrumental,2010,Ballet Dance Company,na,yes
+bach_bach_orchestral_suite_in_d_major_no_3_bwv_1068_air_on_the_g_string_ii_air_2,Classical,2020,J.S. Bach Orchestra & Walter Rinaldi,na,yes
+bach_bach_goldberg_variations,Children's Music,2022,KidsMelody,na,yes
+bach_cello_suite_no_1_in_g_major_bwv_1007_i_pr_lude,Classical,1983,Yo-Yo Ma,na,yes
+beethoven_beethoven_sonata_no_14_moonlight_in_c_sharp_minor_op_27_no_2_i_adagio_,Classical,2025,Ludwig van Beethoven & Mats Widlund,na,yes
+beethoven_beethoven_fur_elise,Instrumental,2010,Ballet Dance Company,na,yes
+beethoven_beethoven_moonlight_sonata_mv_1,New Age,2013,Relaxing Piano Music,na,yes
+beethoven_beethoven,Electronic,2018,The Presets,na,yes
+beyonc_morning_dew_donk,Pop,2026,Beyoncé,yes,yes
+beyonc_dance_for_you,Pop,2011,Beyoncé,yes,yes
+beyonc_irreplaceable,R&B/Soul,2006,Beyoncé,yes,yes
+beyonc_best_thing_i_never_had,Pop,2011,Beyoncé,yes,yes
+bill_evans_peace_piece,Jazz,1959,Bill Evans,yes,yes
+bill_evans_skating_in_central_park,Jazz,1962,Bill Evans & Jim Hall,yes,yes
+bill_evans_stairway_to_the_stars,Jazz,1962,Bill Evans & Jim Hall,yes,yes
+bill_evans_but_beautiful,Jazz,1973,Stan Getz & Bill Evans,yes,yes
+billie_eilish_ocean_eyes,Alternative,2016,Billie Eilish,yes,yes
+billie_eilish_wildflower,Alternative,2024,Billie Eilish,yes,yes
+billie_eilish_birds_of_a_feather,Alternative,2024,Billie Eilish,yes,yes
+billie_eilish_lovely,Pop,2018,Billie Eilish & Khalid,yes,yes
+billie_holiday_i_ll_be_seeing_you,Jazz,1947,Billie Holiday,yes,yes
+billie_holiday_strange_fruit,Jazz,1947,Billie Holiday,yes,yes
+billie_holiday_all_of_me,Jazz,2001,Billie Holiday,yes,yes
+billie_holiday_solitude,Jazz,1941,Billie Holiday,yes,yes
+black_sabbath_paranoid,Metal,1970,Black Sabbath,yes,yes
+black_sabbath_iron_man,Metal,1970,Black Sabbath,yes,yes
+black_sabbath_war_pigs,Metal,1970,Black Sabbath,yes,yes
+black_sabbath_changes,Metal,1972,Black Sabbath,yes,yes
+black_uhuru_guess_who_s_coming_to_dinner,Reggae,1981,Black Uhuru,yes,yes
+black_uhuru_sinsemilla,Reggae,1980,Black Uhuru,yes,yes
+black_uhuru_sponji_reggae,Reggae,1985,Black Uhuru,yes,yes
+black_uhuru_puff_she_puff,Reggae,1981,Black Uhuru,yes,yes
+bob_marley_no_woman_no_cry,,,,na,no
+bob_marley_three_little_birds,Reggae,1984,Bob Marley & The Wailers,yes,yes
+bob_marley_the_wailers_could_you_be_loved,Reggae,1984,Bob Marley & The Wailers,yes,yes
+bob_marley_the_wailers_three_little_birds,Reggae,1984,Bob Marley & The Wailers,yes,yes
+bob_marley_the_wailers_is_this_love,Reggae,1984,Bob Marley & The Wailers,yes,yes
+bob_marley_the_wailers_jamming,Reggae,1977,Bob Marley & The Wailers,yes,yes
+brahms_brahms_the_hungarian_dances_ungarische_t_nze_for_children_and_kids,Instrumental,2010,Ballet Dance Company,na,yes
+brahms_symphony_no_4_in_e_minor_op_98_i_allegro_non_troppo,Classical,1981,Vienna Philharmonic & Carlos Kleiber,na,yes
+brahms_brahms_lullaby,Children's Music,2000,Fred Mollin,na,yes
+brahms_three_romances_op_94_arr_for_viola_and_piano_by_tabea_zimmermann_ii_einfa,Classical,2026,Tabea Zimmermann & Javier Perianes,na,yes
+britney_spears_oops_i_did_it_again,Pop,2000,Britney Spears,yes,yes
+britney_spears_toxic,Pop,2003,Britney Spears,yes,yes
+britney_spears_baby_one_more_time,Pop,1998,Britney Spears,yes,yes
+britney_spears_lucky,Pop,2000,Britney Spears,yes,yes
+bruce_springsteen_i_m_on_fire,Rock,1984,Bruce Springsteen,yes,yes
+bruce_springsteen_dancing_in_the_dark,Rock,1984,Bruce Springsteen,yes,yes
+bruce_springsteen_glory_days,Rock,1984,Bruce Springsteen,yes,yes
+bruce_springsteen_born_to_run,Rock,1975,Bruce Springsteen,yes,yes
+bruno_mars_risk_it_all,Pop,2026,Bruno Mars,yes,yes
+bruno_mars_die_with_a_smile,Pop,2024,Lady Gaga & Bruno Mars,yes,yes
+bruno_mars_when_i_was_your_man,Pop,2012,Bruno Mars,yes,yes
+bruno_mars_just_the_way_you_are,Pop,2010,Bruno Mars,yes,yes
+buju_banton_champion,Roots Reggae,1995,Buju Banton,yes,yes
+buju_banton_wanna_be_loved,Roots Reggae,1995,Buju Banton,yes,yes
+buju_banton_murderer,Roots Reggae,1995,Buju Banton,yes,yes
+buju_banton_driver_a,Reggae,1987,Buju Banton,yes,yes
+burning_spear_marcus_garvey,Reggae,1975,Burning Spear,yes,yes
+burning_spear_slavery_days,Reggae,1975,Burning Spear,yes,yes
+burning_spear_black_wa_da_da_invasion,Reggae,1976,Burning Spear,yes,yes
+burning_spear_calling_rastafari,Reggae,1999,Burning Spear,yes,yes
+cardi_b_bodak_yellow,Hip-Hop/Rap,2017,Cardi B,yes,yes
+cardi_b_ring_feat_kehlani,Hip-Hop/Rap,2018,Cardi B,yes,yes
+cardi_b_wap_feat_megan_thee_stallion,Hip-Hop/Rap,2020,Cardi B,yes,yes
+cardi_b_i_like_it,Hip-Hop/Rap,2018,"Cardi B, Bad Bunny & J Balvin",yes,yes
+charles_mingus_haitian_fight_song,Jazz,1957,Charles Mingus,yes,yes
+charles_mingus_fables_of_faubus,Jazz,1959,Charles Mingus,yes,yes
+charles_mingus_goodbye_pork_pie_hat,Jazz,1959,Charles Mingus,yes,yes
+charles_mingus_ii_b_s,Jazz,1963,Charles Mingus,yes,yes
+charlie_parker_milestones_original_take_1,Jazz,1947,Charlie Parker,yes,yes
+charlie_parker_scrapple_from_the_apple,Bop,1950,Charlie Parker,yes,yes
+charlie_parker_april_in_paris,Jazz,1950,Charlie Parker,yes,yes
+charlie_parker_ornithology,Jazz,1946,Charlie Parker,yes,yes
+chet_baker_i_fall_in_love_too_easily,Jazz,1954,Chet Baker,yes,yes
+chet_baker_it_never_entered_my_mind,Jazz,1953,Chet Baker,yes,yes
+chet_baker_my_funny_valentine,Jazz,1954,Chet Baker,yes,yes
+chet_baker_time_after_time,Jazz,1954,Chet Baker,yes,yes
+chopin_nocturnes_op_9_no_2_in_e_flat_major,Classical,1967,Arthur Rubinstein,na,yes
+chopin_chopin_waltz_no_10_in_b_minor_op_69_no_2_moderato_2021_remaster,Classical,2019,Walter Rinaldi,na,yes
+chopin_nocturnes_op_9_no_1_in_b_flat_minor,Classical,1967,Arthur Rubinstein,na,yes
+chopin_chopin_nocturne_classical_music_for_kids,Instrumental,2010,Grace Harmony Lewis,na,yes
+chronixx_skankin_sweet,Reggae,2017,Chronixx,yes,yes
+chronixx_here_comes_trouble,Reggae,2014,Chronixx,yes,yes
+chronixx_who_knows,Reggae,2014,Protoje & Chronixx,yes,yes
+chronixx_i_can,Reggae,2017,Chronixx,yes,yes
+coldplay_yellow,Alternative,2000,Coldplay,yes,yes
+coldplay_viva_la_vida,Alternative,2008,Coldplay,yes,yes
+coldplay_a_sky_full_of_stars,Alternative,2014,Coldplay,yes,yes
+coldplay_the_scientist,Alternative,2002,Coldplay,yes,yes
+count_basie_basie_straight_ahead,Jazz,1967,Count Basie and His Orchestra,yes,yes
+count_basie_the_girl_from_ipanema,Pop,1965,"Count Basie & Sammy Davis, Jr.",yes,yes
+count_basie_pennies_from_heaven,Jazz,2011,Frank Sinatra & Count Basie,yes,yes
+count_basie_shiny_stockings,Jazz,1957,Count Basie,yes,yes
+culture_karma_chameleon,Rock,1983,Culture Club,no,yes
+culture_two_sevens_clash,Reggae,1977,Culture,yes,yes
+cyndi_lauper_time_after_time,Pop,1983,Cyndi Lauper,yes,yes
+cyndi_lauper_girls_just_want_to_have_fun,Pop,1983,Cyndi Lauper,yes,yes
+cyndi_lauper_true_colors,Pop,1986,Cyndi Lauper,yes,yes
+cyndi_lauper_all_through_the_night,Alternative,1983,Cyndi Lauper,yes,yes
+damian_marley_thank_you_lord,Reggae,2024,"Bugle, Damian Marley & Buju Banton",yes,yes
+damian_marley_hustling_in_my_blood,Modern Dancehall,2025,"Cham, Damian Marley & Stephen Marley",yes,yes
+damian_marley_jamrock_vibes,Reggae,2021,Etana & Damian Marley,yes,yes
+damian_marley_welcome_to_jamrock,Reggae,2005,Damian Marley,yes,yes
+dave_brubeck_take_five,Jazz,1959,Dave Brubeck,yes,yes
+dave_brubeck_brahms_lullaby,Jazz,2020,Dave Brubeck,yes,yes
+dave_brubeck_unsquare_dance,Jazz,1954,Dave Brubeck,yes,yes
+dave_brubeck_over_the_rainbow,Jazz,2000,Dave Brubeck,yes,yes
+debussy_arabesque_no_1,Classical,1987,François-Joël Thiollier,na,yes
+debussy_debussy_clair_de_lune,Instrumental,2011,Jason Minnis,na,yes
+debussy_debussy,Electronic,2010,dZihan & Kamien,na,yes
+debussy_debussy_arabesque,K-Pop,2018,SingSingSong,na,yes
+deep_purple_smoke_on_the_water,Hard Rock,1972,Deep Purple,yes,yes
+deep_purple_highway_star,Hard Rock,1972,Deep Purple,yes,yes
+deep_purple_perfect_strangers,Rock,1984,Deep Purple,yes,yes
+deep_purple_hush,Hard Rock,1978,Deep Purple,yes,yes
+dennis_brown_here_i_come,Lovers Rock,1996,Dennis Brown,yes,yes
+dennis_brown_if_i_had_the_world,Reggae,1981,Dennis Brown,yes,yes
+dennis_brown_promised_land,Lovers Rock,1996,Dennis Brown,yes,yes
+dennis_brown_wolf_leopards,Reggae,1977,Dennis Brown,yes,yes
+desmond_dekker_the_israelites,Pop,1991,Desmond Dekker,yes,yes
+desmond_dekker_007_shanty_town,Reggae,1966,Desmond Dekker & The Aces,yes,yes
+desmond_dekker_you_can_get_it_if_you_really_want,Ska,2000,Desmond Dekker,yes,yes
+desmond_dekker_jamaican_ska,Ska,1993,Desmond Dekker,yes,yes
+dizzy_gillespie_all_the_things_you_are,Jazz,1955,Dizzy Gillespie,yes,yes
+dizzy_gillespie_a_night_in_tunisia,Jazz,1946,Dizzy Gillespie & Dizzy Gillespie and His Orchestra,yes,yes
+dizzy_gillespie_manteca,Jazz,1947,Dizzy Gillespie,yes,yes
+dizzy_gillespie_groovin_high,Jazz,1955,Dizzy Gillespie,yes,yes
+dr_dre_nuthin_but_a_g_thang_feat_snoop_dogg,Hip-Hop/Rap,2016,Dr. Dre,yes,yes
+dr_dre_still_d_r_e_feat_snoop_dogg,Hip-Hop/Rap,1999,Dr. Dre,yes,yes
+dr_dre_the_message_feat_mary_j_blige_rell,Hip-Hop/Rap,1999,Dr. Dre,yes,yes
+dr_dre_forgot_about_dre_feat_eminem,Hip-Hop/Rap,1999,Dr. Dre,yes,yes
+drake_classic_pt2,R&B/Soul,2026,Drake,yes,yes
+drake_hotline_bling,Hip-Hop/Rap,2015,Drake,yes,yes
+drake_finesse,Hip-Hop/Rap,2018,Drake,yes,yes
+drake_one_dance_feat_wizkid_kyla,Hip-Hop/Rap,2016,Drake,yes,yes
+dua_lipa_new_rules,Pop,2017,Dua Lipa,yes,yes
+dua_lipa_levitating,Pop,2020,Dua Lipa,yes,yes
+dua_lipa_training_season,Pop,2024,Dua Lipa,yes,yes
+dua_lipa_dance_the_night,Pop,2023,Dua Lipa,yes,yes
+duke_ellington_in_a_sentimental_mood,Jazz,1963,Duke Ellington & John Coltrane,yes,yes
+duke_ellington_take_the_a_train,Jazz,1953,Duke Ellington,yes,yes
+duke_ellington_it_don_t_mean_a_thing_if_it_ain_t_got_that_swing,Jazz,1961,Duke Ellington & Louis Armstrong,yes,yes
+duke_ellington_lotus_blossom,Jazz,1960,Duke Ellington,yes,yes
+dvo_k_symphony_no_9_in_e_minor_op_95_b_178_from_the_new_world_iv_allegro_con_fuo,Classical,1985,Vienna Philharmonic & Herbert von Karajan,na,yes
+dvo_k_symphony_no_9_in_e_minor_op_95_from_the_new_world_i_adagio_allegro_molto,Classical,1996,Berlin Philharmonic Orchestra & Rafael Kubelik,na,yes
+dvo_k_symphony_no_9_in_e_minor_op_95_from_the_new_world_ii_largo,Classical,2009,London Philharmonic Orchestra & David Parry,na,yes
+dvo_k_symphony_no_9_in_e_minor_op_95_from_the_new_world_iv_allegro_con_fuoco,Classical,1996,Berlin Philharmonic Orchestra & Rafael Kubelik,na,yes
+eagles_hotel_california,Rock,1976,Eagles,yes,yes
+eagles_take_it_easy,Rock,1972,Eagles,yes,yes
+eagles_one_of_these_nights,Rock,1975,Eagles,yes,yes
+eagles_take_it_to_the_limit,Rock,1975,Eagles,yes,yes
+ed_sheeran_perfect,Pop,2017,Ed Sheeran,yes,yes
+ed_sheeran_thinking_out_loud,Pop,2014,Ed Sheeran,yes,yes
+ed_sheeran_shape_of_you,Pop,2017,Ed Sheeran,yes,yes
+ed_sheeran_shivers,Pop,2021,Ed Sheeran,yes,yes
+ella_fitzgerald_dream_a_little_dream_of_me,Jazz,1950,Ella Fitzgerald & Louis Armstrong,yes,yes
+ella_fitzgerald_blue_skies,Jazz,1958,Ella Fitzgerald,yes,yes
+ella_fitzgerald_summertime,Jazz,1957,Louis Armstrong & Ella Fitzgerald,yes,yes
+ella_fitzgerald_they_can_t_take_that_away_from_me,Jazz,1956,Ella Fitzgerald & Louis Armstrong,yes,yes
+elton_john_tiny_dancer,Pop,1971,Elton John,yes,yes
+elton_john_bennie_and_the_jets_2014_remaster,Rock,1973,Elton John,yes,yes
+elton_john_your_song,Pop,1970,Elton John,yes,yes
+elton_john_don_t_let_the_sun_go_down_on_me,Pop,1991,George Michael & Elton John,yes,yes
+eminem_lose_yourself,Soundtrack,2002,Eminem,yes,yes
+eminem_lucky_you_feat_joyner_lucas,Hip-Hop/Rap,2018,Eminem,yes,yes
+eminem_without_me,Hip-Hop/Rap,2002,Eminem,yes,yes
+eminem_the_real_slim_shady,Hip-Hop/Rap,2000,Eminem,yes,yes
+fleetwood_mac_the_chain,Rock,1977,Fleetwood Mac,yes,yes
+fleetwood_mac_silver_springs,Rock,1976,Fleetwood Mac,yes,yes
+fleetwood_mac_dreams,Pop,1987,Fleetwood Mac,yes,yes
+fleetwood_mac_landslide,Pop,1975,Fleetwood Mac,yes,yes
+foo_fighters_everlong,Rock,1997,Foo Fighters,yes,yes
+foo_fighters_my_hero,Rock,1997,Foo Fighters,yes,yes
+foo_fighters_the_pretender,Alternative,2007,Foo Fighters,yes,yes
+foo_fighters_best_of_you,Alternative,2005,Foo Fighters,yes,yes
+george_michael_careless_whisper,Pop,,George Michael,yes,yes
+george_michael_father_figure,Pop,1987,George Michael,yes,yes
+george_michael_one_more_try,Pop,1987,George Michael,yes,yes
+george_michael_faith,Pop,1987,George Michael,yes,yes
+green_day_basket_case,Alternative,1994,Green Day,yes,yes
+green_day_wake_me_up_when_september_ends,Alternative,2004,Green Day,yes,yes
+green_day_when_i_come_around,Alternative,1994,Green Day,yes,yes
+green_day_holiday,Alternative,2004,Green Day,yes,yes
+gregory_isaacs_night_nurse,Reggae,1982,Gregory Isaacs,yes,yes
+gregory_isaacs_return_to_confort_dub,Reggae,2026,Deenucka & Gregory Isaacs,yes,yes
+gregory_isaacs_cool_down_the_pace,Reggae,1982,Gregory Isaacs,yes,yes
+gregory_isaacs_stranger_in_town,Reggae,1982,Gregory Isaacs,yes,yes
+grieg_in_the_hall_of_the_mountain_king_grieg,Instrumental,2012,Edvard Grieg,na,yes
+grieg_grieg_morning_mood_musical_preparation_given_for_this_track,Instrumental,2010,Ballet Dance Company,na,yes
+grieg_peer_gynt_op_23_act_4_no_13_prelude_morning_mood,Classical,2005,Paavo Järvi & Estonian National Symphony Orchestra,na,yes
+grieg_grieg_in_the_hall_of_the_mountain_king_classical_music_for_children_ballet,Instrumental,2010,Ballet Class Company,na,yes
+guns_n_roses_sweet_child_o_mine,Hard Rock,1987,Guns N' Roses,yes,yes
+guns_n_roses_november_rain,Hard Rock,1991,Guns N' Roses,yes,yes
+guns_n_roses_knockin_on_heaven_s_door,Hard Rock,1991,Guns N' Roses,yes,yes
+guns_n_roses_welcome_to_the_jungle,Hard Rock,1987,Guns N' Roses,yes,yes
+handel_concerto_grosso_no_3_in_e_minor_op_6_hwv_321_iv_polonaise_andante,Classical,2015,Gabrieli Consort & Players & Paul McCreesh,na,yes
+handel_messiah_hwv_56_pt_2_chorus_hallelujah,Classical,2023,"Choir of The English Concert, John Nelson & The English Concert",na,yes
+handel_messiah_hwv_56_pt_1_for_unto_us_a_child_is_born_chorus,Classical,2008,The Sixteen & Harry Christophers,na,yes
+handel_messiah_hwv_56_pt_i_no_1_sinfonia,Classical,2017,Le Concert Spirituel & Hervé Niquet,na,yes
+harry_styles_sign_of_the_times,Pop,2017,Harry Styles,yes,yes
+harry_styles_as_it_was,Pop,2022,Harry Styles,yes,yes
+harry_styles_american_girls,Pop,2026,Harry Styles,yes,yes
+harry_styles_watermelon_sugar,Pop,2019,Harry Styles,yes,yes
+haydn_symphony_no_104_in_d_major_london_i_adagio_allegro,Classical,1993,Nikolaus Harnoncourt & Royal Concertgebouw Orchestra,na,yes
+haydn_piano_concerto_in_g_major_hob_xviii_3_allegro,Classical,2000,Norwegian Chamber Orchestra & Leif Ove Andsnes,na,yes
+haydn_die_sch_pfung_hob_xxi_2_part_i_no_1_einleitung_die_vorstellung_des_chaos,Classical,2026,Sir Colin Davis & London Symphony Orchestra,na,yes
+haydn_piano_trio_no_23_in_e_flat_major_op_27_no_3_hob_xv_10_ii_presto_assai,Classical,2022,Trio Gaspard,na,yes
+herbie_hancock_watermelon_man,Jazz,1973,Herbie Hancock,yes,yes
+herbie_hancock_rockit,Jazz,1983,Herbie Hancock,yes,yes
+herbie_hancock_cantaloupe_island,Jazz,1964,Herbie Hancock,yes,yes
+herbie_hancock_chameleon,Jazz,1973,Herbie Hancock,yes,yes
+ice_cube_you_know_how_we_do_it,Hip-Hop/Rap,1993,Ice Cube,yes,yes
+ice_cube_jackin_for_beats,Hip-Hop/Rap,1990,Ice Cube,yes,yes
+ice_cube_friday,Pop,2007,Ice Cube,yes,yes
+ice_cube_you_can_do_it,Pop,2000,"Ice Cube, Mack 10 & Ms. Toi",yes,yes
+inner_circle_sweat_a_la_la_la_la_long,Reggae,1992,Inner Circle,yes,yes
+inner_circle_bad_boys_theme_from_cops,Reggae,1987,Inner Circle,yes,yes
+inner_circle_games_people_play,Reggae,1994,Inner Circle,yes,yes
+inner_circle_tenement_yard_news_carrying_dread_feat_chronixx_jacob_miller,Reggae,2015,Inner Circle,yes,yes
+j_cole_work_out,R&B/Soul,2011,J. Cole,yes,yes
+j_cole_kevin_s_heart,Hip-Hop/Rap,2018,J. Cole,yes,yes
+j_cole_deja_vu,Hip-Hop/Rap,2016,J. Cole,yes,yes
+j_cole_wet_dreamz,Hip-Hop/Rap,2014,J. Cole,yes,yes
+jimi_hendrix_all_along_the_watchtower,Rock,1968,Jimi Hendrix,yes,yes
+jimi_hendrix_voodoo_child_slight_return,Rock,1968,The Jimi Hendrix Experience,no,yes
+jimi_hendrix_angel,Rock,1971,Jimi Hendrix,yes,yes
+jimi_hendrix_freedom,Rock,1971,Jimi Hendrix,yes,yes
+jimmy_cliff_i_can_see_clearly_now,Reggae,1972,Jimmy Cliff,yes,yes
+jimmy_cliff_many_rivers_to_cross,Reggae,2017,Jimmy Cliff,yes,yes
+jimmy_cliff_journey,Reggae,1983,Jimmy Cliff,yes,yes
+jimmy_cliff_you_can_get_it_if_you_really_want,Reggae,2017,Jimmy Cliff,yes,yes
+john_coltrane_giant_steps,Jazz,1960,John Coltrane,yes,yes
+john_coltrane_in_a_sentimental_mood,Jazz,1963,Duke Ellington & John Coltrane,yes,yes
+john_coltrane_my_favorite_things,Jazz,1961,John Coltrane,yes,yes
+john_coltrane_naima_2020_remaster,Jazz,1960,John Coltrane,yes,yes
+john_coltrane_blue_train,Jazz,1958,John Coltrane,yes,yes
+justin_timberlake_my_love_feat_t_i,Pop,2006,Justin Timberlake,yes,yes
+justin_timberlake_rock_your_body,Pop,2002,Justin Timberlake,yes,yes
+justin_timberlake_what_goes_around_comes_around_interlude,Pop,2006,Justin Timberlake,yes,yes
+justin_timberlake_sexyback_feat_timbaland,Pop,2006,Justin Timberlake,yes,yes
+kanye_west_heartless,Hip-Hop/Rap,2008,Kanye West,yes,yes
+kanye_west_follow_god,Hip-Hop/Rap,2019,Kanye West,yes,yes
+kanye_west_god_is,Hip-Hop/Rap,2019,Kanye West,yes,yes
+kanye_west_love_lockdown,Hip-Hop/Rap,2008,Kanye West,yes,yes
+katy_perry_last_friday_night_t_g_i_f,Pop,2010,Katy Perry,yes,yes
+katy_perry_the_one_that_got_away,Pop,2010,Katy Perry,yes,yes
+katy_perry_teenage_dream,Pop,2010,Katy Perry,yes,yes
+katy_perry_hot_n_cold,Pop,2008,Katy Perry,yes,yes
+kendrick_lamar_alright,Hip-Hop/Rap,2015,Kendrick Lamar,yes,yes
+kendrick_lamar_love_feat_zacari,Hip-Hop/Rap,2017,Kendrick Lamar,yes,yes
+kendrick_lamar_luther,Hip-Hop/Rap,2024,Kendrick Lamar,yes,yes
+kendrick_lamar_humble,Hip-Hop/Rap,2017,Kendrick Lamar,yes,yes
+kendrick_lamar_peekaboo_feat_az_chike,Hip-Hop/Rap,2024,Kendrick Lamar,yes,yes
+lady_gaga_always_remember_us_this_way,Soundtrack,2018,Lady Gaga,yes,yes
+lady_gaga_shallow,Soundtrack,2018,Lady Gaga & Bradley Cooper,yes,yes
+lady_gaga_die_with_a_smile,Pop,2024,Lady Gaga & Bruno Mars,yes,yes
+lady_gaga_just_dance_feat_colby_o_donis,Pop,2008,Lady Gaga,yes,yes
+lauryn_hill_ex_factor,R&B/Soul,1998,Lauryn Hill,yes,yes
+lauryn_hill_doo_wop_that_thing,R&B/Soul,1998,Lauryn Hill,yes,yes
+lauryn_hill_can_t_take_my_eyes_off_of_you_i_love_you_baby,R&B/Soul,1998,Lauryn Hill,yes,yes
+lauryn_hill_nothing_even_matters_feat_d_angelo,R&B/Soul,1998,Lauryn Hill,yes,yes
+led_zeppelin_stairway_to_heaven,Rock,1971,Led Zeppelin,yes,yes
+led_zeppelin_immigrant_song,Rock,1970,Led Zeppelin,yes,yes
+led_zeppelin_kashmir,Rock,1975,Led Zeppelin,yes,yes
+led_zeppelin_whole_lotta_love,Hard Rock,1969,Led Zeppelin,yes,yes
+lil_wayne_you_feat_lil_wayne,R&B/Soul,2006,Lloyd featuring Lil Wayne,yes,yes
+lil_wayne_how_to_love,Hip-Hop/Rap,2011,Lil Wayne,yes,yes
+lil_wayne_annihilate_spider_man_across_the_spider_verse,Hip-Hop/Rap,2023,"Metro Boomin, Swae Lee, Lil Wayne & Offset",yes,yes
+lil_wayne_dark_side_of_the_moon_feat_nicki_minaj,Hip-Hop/Rap,2018,Lil Wayne,yes,yes
+liszt_la_campanella,Anime,2021,Franz Liszt,na,yes
+liszt_silent_love_alla_liszt,Classical,2024,Yoav Levanon,na,yes
+liszt_piano_concerto_no_2_in_a_s_125_2_allegro_moderato_allegro_deciso,Classical,1988,"Krystian Zimerman, Boston Symphony Orchestra & Seiji Ozawa",na,yes
+liszt_consolations_s_172_no_3_lento_placido_in_d_flat_major,Classical,2021,Seong-Jin Cho,na,yes
+louis_armstrong_what_a_wonderful_world,Jazz,1967,Louis Armstrong,yes,yes
+louis_armstrong_vie_en_rose_single,Jazz,1950,Louis Armstrong,yes,yes
+louis_armstrong_dream_a_little_dream_of_me,Jazz,1950,Ella Fitzgerald & Louis Armstrong,yes,yes
+louis_armstrong_a_kiss_to_build_a_dream_on_single,Jazz,1950,Louis Armstrong,yes,yes
+beethoven_symphony_no_5,,,,na,no
+madonna_like_a_prayer,Pop,1989,Madonna,yes,yes
+madonna_material_girl,Pop,1984,Madonna,yes,yes
+madonna_into_the_groove,Pop,1984,Madonna,yes,yes
+madonna_like_a_virgin,Pop,1984,Madonna,yes,yes
+mahler_symphony_no_6_in_a_minor_iii_andante_moderato_a_andante_moderato,Classical,2026,Vienna Philharmonic & Andris Nelsons,na,yes
+mahler_symphony_no_5_in_c_sharp_minor_pt_3_iv_adagietto_sehr_langsam,Classical,2006,Michael Tilson Thomas & San Francisco Symphony,na,yes
+mahler_symphony_no_5_in_c_sharp_minor_iv_adagietto_sehr_langsam,Classical,2025,Tonhalle-Orchester Zürich & Paavo Järvi,na,yes
+mahler_symphony_no_1_in_d_major_titan_ii_kr_ftig_bewegt_doch_nicht_zu_schnell,Classical,2024,Seoul Philharmonic Orchestra & Jaap van Zweden,na,yes
+metallica_one,Metal,1988,Metallica,yes,yes
+metallica_enter_sandman,Metal,1991,Metallica,yes,yes
+metallica_master_of_puppets,Metal,1986,Metallica,yes,yes
+metallica_nothing_else_matters,Metal,1991,Metallica,yes,yes
+michael_jackson_billie_jean,Pop,1982,Michael Jackson,yes,yes
+michael_jackson_beat_it,Pop,1982,Michael Jackson,yes,yes
+michael_jackson_smooth_criminal,Pop,1987,Michael Jackson,yes,yes
+michael_jackson_dirty_diana,Pop,1987,Michael Jackson,yes,yes
+miles_davis_so_what,Jazz,1959,Miles Davis,yes,yes
+miles_davis_blue_in_green,Jazz,1959,Miles Davis,yes,yes
+miles_davis_freddie_freeloader,Jazz,1959,Miles Davis,yes,yes
+miles_davis_round_midnight,Jazz,1957,Miles Davis,yes,yes
+missy_elliott_work_it,Hip-Hop/Rap,2002,Missy Elliott,yes,yes
+missy_elliott_all_n_my_grill_feat_big_boi,Hip-Hop/Rap,1999,Missy Elliott,yes,yes
+missy_elliott_gossip_folks_feat_ludacris,Hip-Hop/Rap,2002,Missy Elliott,yes,yes
+missy_elliott_ratata,Electronic,2023,"Skrillex, Missy Elliott & Mr. Oizo",yes,yes
+mozart_mozart,Hip-Hop/Rap,2023,ADTurnUp & ta2cute,na,yes
+mozart_mozart_turkish_march_piano_mozart,Instrumental,2010,Grace Harmony Lewis,na,yes
+mozart_mozart_turkish_march,Instrumental,2010,Ballet Dance Company,na,yes
+mozart_mozart_eine_kleine_nachtmusik_a_little_night_music,Instrumental,2010,Ballet Dance Company,na,yes
+nas_i_can,Pop,2002,Nas,yes,yes
+nas_nas_morales,Hip-Hop/Rap,2023,Metro Boomin & Nas,yes,yes
+nas_panini,Pop,2019,Lil Nas X,no,yes
+nas_old_town_road,Alternative,2019,Lil Nas X,no,yes
+nicki_minaj_bom_bidi_bom,Soundtrack,2017,Nick Jonas & Nicki Minaj,yes,yes
+nicki_minaj_bang_bang,Pop,2014,"Jessie J, Ariana Grande & Nicki Minaj",yes,yes
+nicki_minaj_super_bass,Hip-Hop/Rap,2010,Nicki Minaj,yes,yes
+nicki_minaj_are_you_gone_already,Hip-Hop/Rap,2023,Nicki Minaj,yes,yes
+nina_simone_feeling_good,Jazz,1965,Nina Simone,yes,yes
+nina_simone_i_put_a_spell_on_you,Jazz,1965,Nina Simone,yes,yes
+nina_simone_don_t_let_me_be_misunderstood,Jazz,1964,Nina Simone,yes,yes
+nina_simone_i_wish_i_knew_how_it_would_feel_to_be_free,Jazz,1967,Nina Simone,yes,yes
+nirvana_smells_like_teen_spirit,Rock,1991,Nirvana,yes,yes
+nirvana_come_as_you_are,Rock,1991,Nirvana,yes,yes
+nirvana_heart_shaped_box,Alternative,1993,Nirvana,yes,yes
+nirvana_lithium,Rock,1991,Nirvana,yes,yes
+oscar_peterson_georgia_on_my_mind,Jazz,1963,Oscar Peterson,yes,yes
+oscar_peterson_c_jam_blues,Jazz,1963,Oscar Peterson,yes,yes
+oscar_peterson_they_can_t_take_that_away_from_me,Jazz,1952,Oscar Peterson,yes,yes
+oscar_peterson_love_is_here_to_stay,Jazz,1959,Oscar Peterson,yes,yes
+outkast_behold_a_lady,Hip-Hop/Rap,2003,Outkast,yes,yes
+outkast_she_s_alive,Hip-Hop/Rap,2003,Outkast,yes,yes
+outkast_dracula_s_wedding_feat_kelis,Hip-Hop/Rap,2003,Outkast,yes,yes
+outkast_prototype,Hip-Hop/Rap,2003,Outkast,yes,yes
+pachelbel_pachelbel_s_canon_in_d_major_piano,Relaxation,2013,Johann Pachelbel,na,yes
+pachelbel_pachelbel_s_canon_in_d,Classical,2003,Barrymoore Chamber Orchestra,na,yes
+pachelbel_canon_in_d_major_p_37_arr_for_string_orchestra_by_anon,Classical,1986,Sir Neville Marriner & Academy of St Martin in the Fields,na,yes
+pachelbel_pachelbel_s_canon,Children's Music,2004,The Baby Einstein Music Box Orchestra,na,yes
+pearl_jam_black,Rock,1991,Pearl Jam,yes,yes
+pearl_jam_alive,Rock,1991,Pearl Jam,yes,yes
+pearl_jam_better_man,Alternative,1994,Pearl Jam,yes,yes
+pearl_jam_daughter_remastered,Rock,1993,Pearl Jam,yes,yes
+peter_tosh_legalize_it,Reggae,1976,Peter Tosh,yes,yes
+peter_tosh_wanted_dread_and_alive,Reggae,1981,Peter Tosh,yes,yes
+peter_tosh_johnny_b_goode,Reggae,1983,Peter Tosh,yes,yes
+peter_tosh_stepping_razor,Reggae,1977,Peter Tosh,yes,yes
+pink_floyd_wish_you_were_here,Rock,1975,Pink Floyd,yes,yes
+pink_floyd_comfortably_numb,Rock,1979,Pink Floyd,yes,yes
+pink_floyd_time,Rock,1973,Pink Floyd,yes,yes
+pink_floyd_breathe_in_the_air,Rock,1973,Pink Floyd,yes,yes
+prince_calabama_vault_raw,R&B/Soul,2026,Prince,yes,yes
+prince_prince_and_the_band_vault_raw_2,R&B/Soul,2026,Prince,yes,yes
+prince_purple_rain,Pop,1984,Prince & The Revolution,yes,yes
+prince_i_wanna_be_your_lover,R&B/Soul,1979,Prince,yes,yes
+public_enemy_fight_the_power,Hip-Hop/Rap,1989,Public Enemy,yes,yes
+public_enemy_can_t_truss_it,Hip-Hop/Rap,1991,Public Enemy,yes,yes
+public_enemy_bring_the_noise,Metal,1991,Anthrax & Public Enemy,yes,yes
+public_enemy_rebel_without_a_pause,Hip-Hop/Rap,1987,Public Enemy,yes,yes
+puccini_gianni_schicchi_o_mio_babbino_caro,Classical,2003,"Eteri Lamoris, Tbilisi Symphony Orchestra & Jansug Kakhidze",na,yes
+puccini_turandot_nessun_dorma,Classical,1974,"José Carreras, Chorus of the Vienna State Opera, Orchestra of the Vienna State Opera & Lorin Maazel",na,yes
+puccini_puccini_rond_de_jambe_a_terre_barre_technique,Easy Listening,2017,David Howard & Douglas Corbin,na,yes
+puccini_puccini_madame_butterfly,Pop,1985,Lennart Axelsson,na,yes
+queen_bohemian_rhapsody,Rock,1975,Queen,yes,yes
+queen_fat_bottomed_girls,Rock,1978,Queen,yes,yes
+queen_don_t_stop_me_now,Rock,1978,Queen,yes,yes
+queen_bicycle_race,Rock,1978,Queen,yes,yes
+queen_let_me_entertain_you,Rock,1978,Queen,yes,yes
+rachmaninoff_rhapsody_on_a_theme_of_paganini,Soundtrack,1980,"Sergei Rachmaninoff, John Cardon Debney & Royal Scottish National Orchestra",na,yes
+rachmaninoff_piano_concerto_no_2_in_c_minor_op_18_i_moderato,Classical,2017,"Khatia Buniatishvili, Paavo Järvi & Czech Philharmonic",na,yes
+rachmaninoff_12_romances_op_21_no_7_how_fair_this_spot_transcr_volodos_for_piano,Classical,2025,Nobuyuki Tsujii,na,yes
+rachmaninoff_13_pr_ludes_op_32_no_12_in_g_sharp_minor,Classical,2024,Khatia Buniatishvili,na,yes
+radiohead_let_down,Alternative,1997,Radiohead,yes,yes
+radiohead_all_i_need,Alternative,2007,Radiohead,yes,yes
+radiohead_fake_plastic_trees,Alternative,1995,Radiohead,yes,yes
+radiohead_no_surprises,Alternative,1997,Radiohead,yes,yes
+ravel_bol_ro_m_81,Classical,2025,Gustavo Dudamel & Simón Bolívar Symphony Orchestra of Venezuela,na,yes
+ravel_bolero,Classical,2012,Orchestre National de Lyon & Leonard Slatkin,na,yes
+ravel_pavane_pour_une_infante_d_funte_m_19_arr_lenaerts_for_harp,Classical,2021,Sean Shibe,na,yes
+ravel_ravel,Dance,2025,Dirty South,na,yes
+red_hot_chili_peppers_scar_tissue,Rock,1999,Red Hot Chili Peppers,yes,yes
+red_hot_chili_peppers_under_the_bridge,Rock,1991,Red Hot Chili Peppers,yes,yes
+red_hot_chili_peppers_can_t_stop,Alternative,2002,Red Hot Chili Peppers,yes,yes
+red_hot_chili_peppers_californication,Rock,1999,Red Hot Chili Peppers,yes,yes
+rihanna_don_t_stop_the_music,R&B/Soul,2007,Rihanna,yes,yes
+rihanna_umbrella_feat_ja_z,Pop,2007,Rihanna,yes,yes
+rihanna_only_girl_in_the_world,Pop,2010,Rihanna,yes,yes
+rihanna_take_a_bow,Pop,2008,Rihanna,yes,yes
+sarah_vaughan_misty,Jazz,1958,Sarah Vaughan,yes,yes
+sarah_vaughan_black_coffee,Jazz,1955,Sarah Vaughan,yes,yes
+sarah_vaughan_tenderly,Jazz,1946,Sarah Vaughan,yes,yes
+sarah_vaughan_april_in_paris,Jazz,1954,Sarah Vaughan & Clifford Brown,yes,yes
+satie_gymnopedie_no_1,Alternative,2012,Erik Satie,na,yes
+satie_gnossienne_no_3,Classical,2026,Igor Levit,na,yes
+satie_3_gymnop_dies_no_1_lent_et_douloureux,Classical Crossover,2025,Olivia Belli,na,yes
+satie_3_gymnop_dies_no_1,Classical,1984,Pascal Rogé,na,yes
+schubert_schubert_serenade,Ambient,2023,Rousseau,na,yes
+schubert_4_impromptus_op_90_d_899_no_3_in_g_flat_andante,Classical,1991,Krystian Zimerman,na,yes
+schubert_symphony_no_8_in_b_minor_d_759_unfinished_i_allegro_moderato,Classical,1979,Vienna Philharmonic & Carlos Kleiber,na,yes
+schubert_schubert_schwanengesang_no_12_der_doppelg_nger,Classical,2006,David Fray,na,yes
+sean_paul_temperature,Pop,2005,Sean Paul,yes,yes
+sean_paul_get_busy,Electronic,2002,Sean Paul,yes,yes
+sean_paul_i_m_still_in_love_with_you_feat_sasha,Electronic,2002,Sean Paul,yes,yes
+sean_paul_like_glue,Pop,2002,Sean Paul,yes,yes
+shaggy_it_wasn_t_me_feat_ricardo_ducent,Pop,2000,Shaggy,yes,yes
+shaggy_angel_feat_rayvon,Reggae,2000,Shaggy,yes,yes
+shaggy_boombastic,Pop,1995,Shaggy,yes,yes
+shaggy_hey_sexy_lady_feat_brian_tony_gold,Pop,2002,Shaggy,yes,yes
+shakira_hips_don_t_lie_feat_wyclef_jean,Pop Latino,2005,Shakira,yes,yes
+shakira_waka_waka_esto_es_africa_feat_freshlyground,Pop,2010,Shakira,yes,yes
+shakira_whenever_wherever,Pop Latino,2001,Shakira,yes,yes
+shakira_zoo,Soundtrack,2025,Shakira,yes,yes
+snoop_dogg_snoop_dogg_what_s_my_name_pt_2,Hip-Hop/Rap,2005,Snoop Dogg,yes,yes
+snoop_dogg_sensual_seduction,Hip-Hop/Rap,2007,Snoop Dogg,yes,yes
+snoop_dogg_buttons,Pop,2005,Snoop Dogg & The Pussycat Dolls,yes,yes
+snoop_dogg_g_d_up,Hip-Hop/Rap,1999,Snoop Dogg & Tha Eastsidaz,yes,yes
+sonny_rollins_st_thomas,Jazz,1956,Sonny Rollins,yes,yes
+sonny_rollins_blue_7_rudy_van_gelder_remaster_1956,Jazz,1956,Sonny Rollins,yes,yes
+sonny_rollins_i_want_to_be_happy,Jazz,1954,Thelonious Monk & Sonny Rollins,yes,yes
+sonny_rollins_i_m_an_old_cowhand,Jazz,1957,Sonny Rollins,yes,yes
+stan_getz_the_girl_from_ipanema,Jazz,1964,Stan Getz & João Gilberto,yes,yes
+stan_getz_desafinado_feat_ant_nio_carlos_jobim_mono,Jazz,1964,Stan Getz & João Gilberto,yes,yes
+stan_getz_fools_rush_in_where_angels_fear_to_tread,Jazz,1951,Stan Getz,yes,yes
+stan_getz_but_beautiful,Jazz,1973,Stan Getz & Bill Evans,yes,yes
+steel_pulse_your_house,Reggae,1982,Steel Pulse,yes,yes
+steel_pulse_roller_skates,Reggae,1984,Steel Pulse,yes,yes
+steel_pulse_steppin_out,Reggae,1984,Steel Pulse,yes,yes
+steel_pulse_chant_a_psalm,Reggae,1982,Steel Pulse,yes,yes
+stravinsky_funeral_song_op_5,Classical,2021,The Philadelphia Orchestra & Yannick Nézet-Séguin,na,yes
+stravinsky_the_firebird_kc_10_ii_apparition_de_l_oiseau_de_feu_danse_de_l_oiseau,Classical,2016,London Symphony Orchestra & Valery Gergiev,na,yes
+stravinsky_le_sacre_du_printemps_ii_les_augres_printaniers_danses_des_adolescent,Classical,1992,The Cleveland Orchestra & Pierre Boulez,na,yes
+stravinsky_l_oiseau_de_feu_k010_xvi_danse_infernale_de_tous_les_sujets_de_kastch,Classical,1993,Chicago Symphony Orchestra & Pierre Boulez,na,yes
+taylor_swift_shake_it_off,Pop,2014,Taylor Swift,yes,yes
+taylor_swift_patient_zero,Pop,2026,Taylor Swift,yes,yes
+taylor_swift_cleveland,Pop,2026,Taylor Swift,yes,yes
+taylor_swift_pink_clouding,Pop,2026,Taylor Swift,yes,yes
+taylor_swift_babylon,Pop,2026,Taylor Swift,yes,yes
+tchaikovsky_1812_overture_op_49,Classical,1963,Leonard Bernstein & New York Philharmonic,na,yes
+tchaikovsky_piano_concerto_no_1_in_b_flat_minor_op_23_i_allegro_non_troppo_e_mol,Classical,1958,"Van Cliburn, Kirill Kondrashin & The RCA Symphony Orchestra",na,yes
+tchaikovsky_the_nutcracker_op_71_iii_march_tempo_di_marcia_viva,Classical,2007,Bonn Classical Philharmonic & Heribert Beissel,na,yes
+tchaikovsky_the_nutcracker_op_71_iv_the_children_s_galop_entrance_of_the_parents,Classical,2007,Bonn Classical Philharmonic & Heribert Beissel,na,yes
+the_beatles_here_comes_the_sun,Rock,1969,The Beatles,yes,yes
+the_beatles_yesterday,Rock,1965,The Beatles,yes,yes
+the_beatles_in_my_life,Rock,1965,The Beatles,yes,yes
+the_beatles_hey_jude,Rock,1968,The Beatles,yes,yes
+the_clash_should_i_stay_or_should_i_go,Punk,1982,The Clash,yes,yes
+the_clash_rock_the_casbah,Punk,1982,The Clash,yes,yes
+the_clash_london_calling,Punk,1979,The Clash,yes,yes
+the_clash_train_in_vain_stand_by_me,Punk,1979,The Clash,yes,yes
+the_doors_riders_on_the_storm,Rock,1971,The Doors,yes,yes
+the_doors_people_are_strange,Rock,1967,The Doors,yes,yes
+the_doors_light_my_fire,Rock,1967,The Doors,yes,yes
+the_doors_break_on_through_to_the_other_side_mono,Rock,1967,The Doors,yes,yes
+notorious_big_juicy,Hip-Hop/Rap,1994,The Notorious B.I.G.,yes,yes
+the_notorious_b_i_g_big_poppa,Hip-Hop/Rap,1994,The Notorious B.I.G.,yes,yes
+the_notorious_b_i_g_machine_gun_funk,Hip-Hop/Rap,1994,The Notorious B.I.G.,yes,yes
+the_notorious_b_i_g_get_money,Hip-Hop/Rap,1995,The Notorious B.I.G.,yes,yes
+the_rolling_stones_gimme_shelter_remastered_2019,Rock,1969,The Rolling Stones,yes,yes
+the_rolling_stones_paint_it_black,Rock,1966,The Rolling Stones,yes,yes
+the_rolling_stones_you_can_t_always_get_what_you_want_remastered_2019,Rock,1969,The Rolling Stones,yes,yes
+the_rolling_stones_start_me_up,Rock,1981,The Rolling Stones,yes,yes
+the_weeknd_call_out_my_name,R&B/Soul,2018,The Weeknd,yes,yes
+the_weeknd_die_for_you,R&B/Soul,2016,The Weeknd,yes,yes
+the_weeknd_one_of_the_girls,Soundtrack,2023,"The Weeknd, JENNIE & Lily Rose Depp",yes,yes
+the_weeknd_i_feel_it_coming_feat_daft_punk,R&B/Soul,2016,The Weeknd,yes,yes
+the_who_baba_o_riley,Rock,1971,The Who,yes,yes
+the_who_eminence_front,Rock,1982,The Who,yes,yes
+the_who_love_reign_o_er_me,Rock,1973,The Who,yes,yes
+the_who_behind_blue_eyes,Rock,1971,The Who,yes,yes
+thelonious_monk_brilliant_corners,Jazz,1957,Thelonious Monk,yes,yes
+thelonious_monk_straight_no_chaser,Jazz,1967,Thelonious Monk,yes,yes
+thelonious_monk_round_midnight,Jazz,1947,Thelonious Monk,yes,yes
+thelonious_monk_caravan,Jazz,1955,Thelonious Monk,yes,yes
+third_world_now_that_we_found_love_single,Reggae,1978,Third World,yes,yes
+third_world_committed,Reggae,1992,Third World,yes,yes
+third_world_forbidden_love,R&B/Soul,1989,Third World,yes,yes
+third_world_reggae_ambassador,Worldwide,1989,Third World,yes,yes
+toots_maytals_pressure_drop,Reggae,1973,Toots & The Maytals,yes,yes
+toots_and_the_maytals_take_me_home_country_roads,Reggae,1972,Toots & The Maytals,yes,yes
+toots_and_the_maytals_54_46_was_my_number,Reggae,1973,Toots & The Maytals,yes,yes
+toots_and_the_maytals_funky_kingston,Reggae,1973,Toots & The Maytals,yes,yes
+travis_scott_yosemite,Hip-Hop/Rap,2018,Travis Scott,yes,yes
+travis_scott_butterfly_effect,Hip-Hop/Rap,2017,Travis Scott,yes,yes
+travis_scott_goosebumps,Hip-Hop/Rap,2016,Travis Scott,yes,yes
+travis_scott_go_off,Hip-Hop/Rap,2017,"Lil Uzi Vert, Quavo & Travis Scott",yes,yes
+u2_with_or_without_you,Rock,1987,U2,yes,yes
+u2_beautiful_day,Rock,2000,U2,yes,yes
+u2_one,Rock,1991,U2,yes,yes
+u2_i_still_haven_t_found_what_i_m_looking_for,Rock,1987,U2,yes,yes
+ub40_the_way_you_do_the_things_you_do,Pop,1989,UB40,yes,yes
+ub40_i_can_t_help_falling_in_love_with_you,Pop,1993,UB40,yes,yes
+ub40_kingston_town,Pop,1989,UB40,yes,yes
+ub40_here_i_am_come_and_take_me,Pop,1995,UB40,yes,yes
+verdi_verdi_and_74_musicians,Trance,2024,Mauro Picotto,na,yes
+verdi_verdi_barcarolle,Children's Music,2010,Steve Porter,na,yes
+verdi_verdi_rigoletto_paraphrase_de_concert_s_434_r_267,Classical,1969,Jorge Bolet,na,yes
+verdi_verdi_la_traviata_brindisi_orgel_lullaby,Children's Music,2021,KidsMelody,na,yes
+vivaldi_vivaldi_spring_after_the_four_seasons_rv_269,Classical Crossover,2016,Black Violin,na,yes
+vivaldi_vivaldi_feat_mariana_bo,Electronic,2022,Timmy Trumpet,na,yes
+vivaldi_vivaldi_winter_x_attack_on_titans_rittaikidou,Worldwide,2023,Alexis DL,na,yes
+vivaldi_vivaldi_stabat_mater_stabat_mater,Classical,2021,Antonio Vivaldi & Ensemble Baroque de Toulouse,na,yes
+wes_montgomery_california_nights,Jazz,1967,Wes Montgomery,yes,yes
+wes_montgomery_bumpin_on_sunset,Jazz,1966,Wes Montgomery,yes,yes
+wes_montgomery_days_of_wine_and_roses,Jazz,1963,Wes Montgomery,yes,yes
+wes_montgomery_a_day_in_the_life,Jazz,1967,Wes Montgomery,yes,yes
+whitney_houston_i_will_always_love_you,Soundtrack,1992,Whitney Houston,yes,yes
+whitney_houston_i_wanna_dance_with_somebody_who_loves_me,R&B/Soul,1987,Whitney Houston,yes,yes
+whitney_houston_i_have_nothing,Soundtrack,1992,Whitney Houston,yes,yes
+whitney_houston_saving_all_my_love_for_you,Pop,1985,Whitney Houston,yes,yes
+mozart_eine_kleine_nachtmusik,,,,na,no
+wu_tang_clan_c_r_e_a_m_cash_rules_everything_around_me_a_cappella,Hip-Hop/Rap,1993,Wu-Tang Clan,yes,yes
+wu_tang_clan_wu_tang_clan_ain_t_nuthing_ta_f_wit_feat_rza_inspectah_deck_method_,Hip-Hop/Rap,1993,Wu-Tang Clan,yes,yes
+wu_tang_clan_never_let_go,Hip-Hop,2014,Wu-Tang Clan,yes,yes
+wu_tang_clan_clan_in_da_front_feat_rza_gza,Hip-Hop/Rap,1993,Wu-Tang Clan,yes,yes
+ziggy_marley_beach_in_hawaii,Reggae,2006,Ziggy Marley,yes,yes
+ziggy_marley_true_to_myself,Reggae,2003,Ziggy Marley,yes,yes
+ziggy_marley_love_is_my_religion,Reggae,2006,Ziggy Marley,yes,yes
+ziggy_marley_u_r,Alternative,,Good Charlotte & Ziggy Marley,yes,yes

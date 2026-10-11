@@ -8,7 +8,7 @@ catch the two failure modes seen in the first catalogue build:
     (e.g. Lil Nas X's "Panini" filed under Nas);
   - for classical, where iTunes credits the performer so the artist test
     cannot apply, a title match that is actually a pop/rap/electronic track
-    (iTunes tags it with a clearly non-classical genre).
+    (iTunes tags it pop, hip-hop or reggae).
 """
 
 from src.evaluation.label_check import coarse_genre
@@ -27,7 +27,9 @@ def catalog_issues(row: dict, extra: dict | None) -> list[str]:
         issues.append(f"catalog: iTunes credits '{extra.get('itunes_artist', '')}', not '{row['artist']}'")
     if row["genre"] == "classical":
         guess = coarse_genre(extra.get("itunes_genre", ""))
-        if guess not in (None, "classical"):
+        # Only clearly different genres count as evidence. A real classical piece is often
+        # tagged "Alternative" or similar by iTunes (e.g. Satie), so rock-family tags are not flagged.
+        if guess in ("hiphop", "pop", "reggae"):
             issues.append(f"catalog: classical track tagged '{extra['itunes_genre']}' by iTunes "
                           "(probably a different recording)")
     return issues

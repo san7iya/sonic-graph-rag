@@ -13,3 +13,5 @@ docs/review1_cheatsheet.pdf
 data/processed/text/
 data/processed/track_records.csv
 data/processed/ingestion_report.csv
+# Audit sheet quotes Wikipedia bios as context; kept local (see README, Data and licensing)
+data/processed/judge_audit.csv
