@@ -12,7 +12,7 @@ from __future__ import annotations
 # so more specific families come before the broad "rock"/"pop" ones.
 _RULES = [
     (("hip-hop", "hip hop", "rap"), "hiphop"),
-    (("reggae", "dancehall", "ska", "dub", "roots"), "reggae"),
+    (("reggae", "lovers rock", "dancehall", "ska", "dub", "roots"), "reggae"),
     (("jazz", "bebop", "big band", "swing"), "jazz"),
     (("classical", "opera", "baroque", "orchestral", "chamber", "symphon"), "classical"),
     (("rock", "metal", "punk", "grunge", "alternative", "indie"), "rock"),

@@ -18,6 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src import config
+from src.preprocessing.catalog_checks import catalog_issues
 from src.preprocessing.clean_audio import validate_audio
 from src.preprocessing.clean_images import validate_image
 from src.preprocessing.clean_text import clean_bio, validate_text, with_metadata_prefix
@@ -27,10 +28,20 @@ RECORD_FIELDS = ["track_id", "title", "artist", "genre", "album", "status",
                  "audio_seconds", "bio_chars", "bio_source", "issues"]
 
 
-def process_track(row: dict) -> dict:
-    """Validate one track's modalities and return its record row."""
+def load_catalog_extra() -> dict[str, dict]:
+    """iTunes side table from src/ingestion/enrich_catalog.py, keyed by track_id
+    (empty if it has not been built, in which case identity is not checked)."""
+    extra_csv = config.PROCESSED_DIR / "catalog_extra.csv"
+    if not extra_csv.exists():
+        return {}
+    with open(extra_csv, newline="", encoding="utf-8") as f:
+        return {r["track_id"]: r for r in csv.DictReader(f)}
+
+
+def process_track(row: dict, extra: dict | None = None) -> dict:
+    """Validate one track's modalities and identity; return its record row."""
     tid = row["track_id"]
-    issues = []
+    issues = catalog_issues(row, extra)
 
     text_path = config.RAW_TEXT_DIR / f"{tid}.txt"
     bio_chars = 0
@@ -85,7 +96,10 @@ if __name__ == "__main__":
         rows = list(csv.DictReader(f))
     print(f"Validating {len(rows)} tracks from {catalog.name}...")
 
-    records = [process_track(r) for r in rows]
+    extra = load_catalog_extra()
+    if not extra:
+        print("Note: catalog_extra.csv not found; track identity (artist/recording) is not checked.")
+    records = [process_track(r, extra.get(r["track_id"])) for r in rows]
     with open(config.TRACK_RECORDS_CSV, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=RECORD_FIELDS)
         writer.writeheader()

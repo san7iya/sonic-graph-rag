@@ -20,10 +20,11 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src import config
+from src.ingestion.artist_match import same_primary_artist
 from src.ingestion.build_catalog import ITUNES_SEARCH_URL, normalize_title
 
 OUT_CSV = config.PROCESSED_DIR / "catalog_extra.csv"
-FIELDS = ["track_id", "itunes_genre", "release_year", "matched"]
+FIELDS = ["track_id", "itunes_genre", "release_year", "itunes_artist", "artist_ok", "matched"]
 
 
 def search_artist(artist: str, attempts: int = 4) -> list[dict]:
@@ -56,14 +57,26 @@ if __name__ == "__main__":
         except requests.RequestException as e:
             print(f"[FAIL] {artist}: {type(e).__name__}")
             results = []
-        by_title = {}
+        by_title: dict[str, list[dict]] = {}
         for res in results:
-            by_title.setdefault(normalize_title(res.get("trackName", "")), res)
+            by_title.setdefault(normalize_title(res.get("trackName", "")), []).append(res)
         for t in tracks:
-            hit = by_title.get(normalize_title(t["title"]))
+            candidates = by_title.get(normalize_title(t["title"]), [])
+            # Prefer a result by the intended artist; fall back to any same-title result so a
+            # wrong-artist match is *recorded* (artist_ok=no) rather than hidden.
+            right = [c for c in candidates if same_primary_artist(t["artist"], c["artistName"])]
+            hit = (right or candidates or [None])[0]
+            if hit is None:
+                artist_ok = "na"
+            elif t["genre"] == "classical":
+                artist_ok = "na"      # iTunes credits the performer, not the composer
+            else:
+                artist_ok = "yes" if right else "no"
             out.append({"track_id": t["track_id"],
                         "itunes_genre": hit["primaryGenreName"] if hit else "",
                         "release_year": hit.get("releaseDate", "")[:4] if hit else "",
+                        "itunes_artist": hit["artistName"] if hit else "",
+                        "artist_ok": artist_ok,
                         "matched": "yes" if hit else "no"})
         if n % 20 == 0:
             print(f"[{n}/{len(by_artist)}] artists")
