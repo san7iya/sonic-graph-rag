@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING
 import networkx as nx
 import numpy as np
 
+from src import config
 from src.embeddings import fusion
 from src.graph.graph_utils import song_neighborhood
 from scripts.encode_modality import query_cache_path, run_encoder_subprocess
@@ -44,6 +45,23 @@ def embed_query(query_text: str) -> np.ndarray:
         run_encoder_subprocess([modality, "--query", query_text])
         sub_vecs.append(np.load(query_cache_path(modality)))
     return fusion.fuse_embeddings(*sub_vecs)
+
+
+def modality_scores(index: FusedVectorIndex, track_id: str, query_vec: np.ndarray) -> dict[str, float]:
+    """Split one hit's fused similarity into its text / image / audio parts.
+
+    Why: the fused score is the sum of three per-modality cosines (each
+    block is unit-normalized), so showing the parts reveals *which*
+    modality made a song match -- the main thing a reviewer will ask
+    about a multi-modal retriever. Fusion and this split share the same
+    block boundaries from config, so they cannot drift apart.
+    """
+    track_vec = index.index.reconstruct(index.track_ids.index(track_id))
+    bounds = np.cumsum([0, config.TEXT_EMBED_DIM, config.IMAGE_EMBED_DIM, config.AUDIO_EMBED_DIM])
+    return {
+        name: float(np.dot(track_vec[lo:hi], query_vec[lo:hi]))
+        for name, lo, hi in zip(("text", "image", "audio"), bounds[:-1], bounds[1:])
+    }
 
 
 def retrieve(query_text: str, index: FusedVectorIndex, track_metadata: dict[str, dict],

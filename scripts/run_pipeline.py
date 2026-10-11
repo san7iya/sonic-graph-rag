@@ -37,25 +37,13 @@ def load_seed_tracks() -> list[dict]:
 
 
 def valid_tracks_with_bios() -> tuple[list[dict], dict[str, str]]:
-    """Filter seed tracks to those with all three raw modality files
-    present, and read their bios (cheap — no ML imports needed).
+    """Tracks that passed preprocessing, with their cleaned bios (cheap --
+    no ML imports needed). Run `python -m scripts.preprocess` first.
     """
-    rows = load_seed_tracks()
-    valid_rows = []
-    for row in rows:
-        track_id = row["track_id"]
-        bio_path = config.RAW_TEXT_DIR / f"{track_id}.txt"
-        image_path = config.RAW_IMAGE_DIR / f"{track_id}.jpg"
-        audio_path = config.RAW_AUDIO_DIR / f"{track_id}.m4a"
-        if not (bio_path.exists() and image_path.exists() and audio_path.exists()):
-            print(f"[SKIP] {track_id}: missing one or more modality files")
-            continue
-        valid_rows.append(row)
+    from src.preprocessing.records import bio_path, load_valid_tracks
 
-    bios = {
-        row["track_id"]: (config.RAW_TEXT_DIR / f"{row['track_id']}.txt").read_text(encoding="utf-8")
-        for row in valid_rows
-    }
+    valid_rows = load_valid_tracks()
+    bios = {row["track_id"]: bio_path(row["track_id"]).read_text(encoding="utf-8") for row in valid_rows}
     return valid_rows, bios
 
 

@@ -26,7 +26,11 @@ RAW_TEXT_DIR = RAW_DIR / "text"
 RAW_IMAGE_DIR = RAW_DIR / "images"
 RAW_AUDIO_DIR = RAW_DIR / "audio"
 
+PROCESSED_TEXT_DIR = PROCESSED_DIR / "text"   # cleaned bios (raw ones stay untouched in RAW_TEXT_DIR)
+
 SEED_TRACKS_CSV = PROCESSED_DIR / "seed_tracks.csv"
+CATALOG_CSV = PROCESSED_DIR / "catalog.csv"             # scaled catalogue (src/ingestion/build_catalog.py)
+TRACK_RECORDS_CSV = PROCESSED_DIR / "track_records.csv"  # per-track validation result (scripts/preprocess.py)
 INGESTION_REPORT_CSV = PROCESSED_DIR / "ingestion_report.csv"
 
 FAISS_INDEX_PATH = CACHE_DIR / "faiss_index.bin"
@@ -45,6 +49,12 @@ LLM_MODEL_NAME = "gemini-3.6-flash"  # gemini-2.5/2.0-flash from the original sp
 # now blocked for this API key ("no longer available to new users"); this is
 # the exact replacement Google's own API error names. Flagged and confirmed
 # with the user 2026-08-20 rather than swapped silently.
+
+# Groundedness judge (scripts/run_groundedness.py). A separate, smaller model
+# so judging has its own free-tier quota (20 requests/day per model) and the
+# judge is not literally the same model that wrote the answer. Chosen with
+# the user 2026-10-11 after gemini-3.6-flash's daily quota ran out.
+JUDGE_MODEL_NAME = "gemini-3.5-flash-lite"
 
 # --- Embedding dimensions (must match the models above) ---
 TEXT_EMBED_DIM = 384

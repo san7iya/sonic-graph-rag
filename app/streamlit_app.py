@@ -98,6 +98,15 @@ if submitted and query.strip():
                 st.markdown(f"**{hit['title']}**")
                 st.caption(f"{hit['artist']} · {hit['genre']}")
                 st.metric("similarity", f"{hit['similarity']:.3f}")
+                parts = hit["modality_scores"]
+                st.caption("text {text:.2f} · image {image:.2f} · audio {audio:.2f}".format(**parts))
+                with st.expander("Graph facts"):
+                    g = hit["graph"]
+                    st.markdown(
+                        f"- Album: {g['album']}\n"
+                        f"- Same artist: {', '.join(g['same_artist_tracks']) or 'none'}\n"
+                        f"- Same genre: {len(g['same_genre_tracks'])} other tracks"
+                    )
 
         st.divider()
         st.subheader("Gemini answer (grounded in the context above)")
@@ -112,7 +121,9 @@ if submitted and query.strip():
                 "- Similarity score above is an inner product over the fused vectors — since "
                 "each 384/512/512 block is separately unit-normalized rather than the full "
                 "1408-dim vector, this is the *sum* of three per-modality cosine similarities "
-                "(range roughly [-3, 3]), not a single bounded cosine similarity"
+                "(range roughly [-3, 3]), not a single bounded cosine similarity\n"
+                "- The small `text / image / audio` line under each track is that sum split into "
+                "its three cosines, so you can see which modality drove the match"
             )
 elif submitted:
     st.warning("Type a query first.")

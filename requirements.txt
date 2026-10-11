@@ -13,3 +13,4 @@ python-dotenv
 pillow
 librosa
 imageio-ffmpeg
+httpx

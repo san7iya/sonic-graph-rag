@@ -23,9 +23,19 @@ and retrievable through a live RAG query. Nothing here is a placeholder —
 every embedding, similarity score, and generated answer comes from
 actually running the pipeline against real data.
 
-Next up: scaling ingestion to 500–2000 tracks, building out the explicit
-knowledge graph (artist/album/genre relations), and a formal
-precision@k / groundedness evaluation.
+Also in place: an explicit knowledge graph (Song, Artist, Album and Genre
+nodes linked by PERFORMED_BY, BELONGS_TO_ALBUM and HAS_GENRE edges) whose
+1-hop neighbourhood is added to each retrieved song's context, a
+validation step that flags unusable audio, images and bios before
+encoding, and a retrieval evaluation (precision@3 and MRR against
+hand-labelled queries, plus a per-modality score breakdown and latency)
+written to `results.md`. On the 18-track sample, fused retrieval reaches
+mean P@3 0.64 and MRR 0.93; see `results.md` for the full comparison
+against text-only, image-only and audio-only retrieval.
+
+Next up: scaling ingestion to several hundred tracks, a groundedness
+evaluation of generated answers, and testing whether weighting the
+modalities improves on plain concatenation.
 
 ## Setup
 
@@ -39,7 +49,9 @@ copy .env.example .env         # then fill in GEMINI_API_KEY from Google AI Stud
 ## Running it
 
 ```bash
+python -m scripts.preprocess                               # validate raw files, write data/processed/track_records.csv
 python -m scripts.run_pipeline                             # full pipeline, one demo query, prints everything
+python -m scripts.run_evaluation                           # precision@k / MRR / latency -> results.md
 python -m scripts.answer_query "your question" --top-k 5    # single query, JSON result
 streamlit run app/streamlit_app.py                          # interactive demo UI
 ```

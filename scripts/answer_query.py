@@ -54,6 +54,8 @@ if __name__ == "__main__":
             {
                 "track_id": h["track_id"], "title": h["title"], "artist": h["artist"],
                 "genre": h["genre"], "similarity": float(h["similarity"]),
+                "modality_scores": retriever.modality_scores(index, h["track_id"], query_vec),
+                "graph": h["graph"],
             }
             for h in hits
         ],

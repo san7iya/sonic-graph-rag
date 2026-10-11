@@ -15,7 +15,6 @@ memory when the process exits. This also anticipates Milestone 3's
 """
 
 import argparse
-import csv
 import subprocess
 import sys
 import time
@@ -52,23 +51,19 @@ def run_encoder_subprocess(args: list[str], retries: int = 2, delay_seconds: flo
 
 
 def _valid_tracks() -> list[dict]:
-    with open(config.SEED_TRACKS_CSV, newline="", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
-    valid = []
-    for row in rows:
-        track_id = row["track_id"]
-        if (config.RAW_TEXT_DIR / f"{track_id}.txt").exists() and \
-           (config.RAW_IMAGE_DIR / f"{track_id}.jpg").exists() and \
-           (config.RAW_AUDIO_DIR / f"{track_id}.m4a").exists():
-            valid.append(row)
-    return valid
+    """Tracks that passed scripts/preprocess.py validation in all three
+    modalities (shared with run_pipeline so both always see the same corpus).
+    """
+    from src.preprocessing.records import load_valid_tracks
+    return load_valid_tracks()
 
 
 def encode_text_modality(rows: list[dict]) -> dict[str, np.ndarray]:
     from src.embeddings import text_encoder
     vecs = {}
     for row in rows:
-        bio = (config.RAW_TEXT_DIR / f"{row['track_id']}.txt").read_text(encoding="utf-8")
+        from src.preprocessing.records import bio_path
+        bio = bio_path(row["track_id"]).read_text(encoding="utf-8")
         vecs[row["track_id"]] = text_encoder.encode_text(bio)
     return vecs
 
@@ -96,6 +91,9 @@ ENCODERS = {
     "image": encode_image_modality,
     "audio": encode_audio_modality,
 }
+
+
+CHECKPOINT_EVERY = 25  # tracks encoded between cache saves
 
 
 def cache_path(modality: str) -> Path:
@@ -135,6 +133,13 @@ if __name__ == "__main__":
                          help="JSON list of query strings; encode them all in this one process "
                               "(model loaded once) and write eval_query_<modality>_vectors.npz, "
                               "keyed q0, q1, ... Used by scripts/run_evaluation.py.")
+    parser.add_argument("--out", default=None,
+                         help="With --queries-file: write the .npz here instead of the default "
+                              "eval_query_<modality>_vectors.npz, so a second query set does not "
+                              "overwrite the first.")
+    parser.add_argument("--force", action="store_true",
+                         help="Re-encode every track instead of only the ones missing from the cache "
+                              "(use after changing a model or the cleaned input).")
     args = parser.parse_args()
 
     config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -143,15 +148,26 @@ if __name__ == "__main__":
         import json
         queries = json.loads(Path(args.queries_file).read_text(encoding="utf-8"))
         vecs = {f"q{i}": _encode_query_text(args.modality, q) for i, q in enumerate(queries)}
-        np.savez(eval_query_cache_path(args.modality), **vecs)
-        print(f"[{args.modality}] wrote {len(vecs)} query vectors to {eval_query_cache_path(args.modality)}")
+        out_path = Path(args.out) if args.out else eval_query_cache_path(args.modality)
+        np.savez(out_path, **vecs)
+        print(f"[{args.modality}] wrote {len(vecs)} query vectors to {out_path}")
     elif args.query is not None:
         vec = _encode_query_text(args.modality, args.query)
         np.save(query_cache_path(args.modality), vec)
         print(f"[{args.modality}] wrote {query_cache_path(args.modality)}")
     else:
         rows = _valid_tracks()
-        print(f"[{args.modality}] encoding {len(rows)} tracks...")
-        vecs = ENCODERS[args.modality](rows)
-        np.savez(cache_path(args.modality), **vecs)
-        print(f"[{args.modality}] wrote {cache_path(args.modality)}")
+        path = cache_path(args.modality)
+        cached = dict(np.load(path)) if (path.exists() and not args.force) else {}
+        todo = [r for r in rows if r["track_id"] not in cached]
+        print(f"[{args.modality}] {len(rows)} valid tracks, {len(cached)} already cached, "
+              f"{len(todo)} to encode...")
+        # Checkpoint after every batch so a crash or interruption in a long
+        # CPU run (CLAP over hundreds of clips) loses at most one batch.
+        for start in range(0, len(todo), CHECKPOINT_EVERY):
+            cached.update(ENCODERS[args.modality](todo[start:start + CHECKPOINT_EVERY]))
+            np.savez(path, **cached)
+            print(f"[{args.modality}] {min(start + CHECKPOINT_EVERY, len(todo))}/{len(todo)} encoded")
+        if not todo:
+            np.savez(path, **cached)
+        print(f"[{args.modality}] wrote {path} ({len(cached)} vectors)")

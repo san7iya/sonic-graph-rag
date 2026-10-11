@@ -71,3 +71,23 @@ def test_retrieve_with_graph_adds_one_hop_expansion():
 
     assert hits[0]["graph"]["album"] == "Album song_a"
     assert hits[0]["graph"]["same_artist_tracks"] == ["Song C"]
+
+
+def test_modality_scores_split_sums_to_fused_similarity():
+    from src import config
+    from src.embeddings import fusion
+    from src.rag.retriever import modality_scores
+
+    rng = np.random.default_rng(0)
+    def blocks():
+        return (rng.normal(size=config.TEXT_EMBED_DIM), rng.normal(size=config.IMAGE_EMBED_DIM),
+                rng.normal(size=config.AUDIO_EMBED_DIM))
+
+    index = FusedVectorIndex(dim=config.FUSED_EMBED_DIM)
+    index.add("t", fusion.fuse_embeddings(*blocks()))
+    query_vec = fusion.fuse_embeddings(*blocks())
+
+    parts = modality_scores(index, "t", query_vec)
+    fused_similarity = index.search(query_vec, 1)[0][1]
+    assert set(parts) == {"text", "image", "audio"}
+    assert abs(sum(parts.values()) - fused_similarity) < 1e-4

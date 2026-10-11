@@ -7,6 +7,7 @@ does not hardcode or invent one.
 
 import os
 
+import httpx
 from dotenv import load_dotenv
 from google import genai
 from google.genai import errors as genai_errors
@@ -40,8 +41,11 @@ def _get_client() -> genai.Client:
     return _client
 
 
-def generate_answer(prompt: str) -> str:
+def generate_answer(prompt: str, model: str | None = None) -> str:
     """Send one prompt to Gemini and return the plain-text response.
+
+    `model` overrides config.LLM_MODEL_NAME (used by the groundedness
+    judge, which runs on a different model).
 
     Raises RuntimeError with a clear message on a transient server-side
     failure (e.g. 503 "high demand") instead of letting the SDK's raw
@@ -50,10 +54,14 @@ def generate_answer(prompt: str) -> str:
     """
     client = _get_client()
     try:
-        response = client.models.generate_content(model=config.LLM_MODEL_NAME, contents=prompt)
+        response = client.models.generate_content(model=model or config.LLM_MODEL_NAME, contents=prompt)
     except genai_errors.ServerError as e:
         raise RuntimeError(
             f"Gemini ({config.LLM_MODEL_NAME}) returned a server error, likely transient "
             f"high-demand load on the free tier: {e}. Retry the query."
+        ) from e
+    except httpx.TransportError as e:
+        raise RuntimeError(
+            f"Network error talking to Gemini ({type(e).__name__}: {e}). Usually transient; retry."
         ) from e
     return response.text
