@@ -47,6 +47,9 @@ def embed_query(query_text: str) -> np.ndarray:
     return fusion.fuse_embeddings(*sub_vecs)
 
 
+MAX_GENRE_EXAMPLES = 5
+
+
 def modality_scores(index: FusedVectorIndex, track_id: str, query_vec: np.ndarray) -> dict[str, float]:
     """Split one hit's fused similarity into its text / image / audio parts.
 
@@ -66,7 +69,8 @@ def modality_scores(index: FusedVectorIndex, track_id: str, query_vec: np.ndarra
 
 def retrieve(query_text: str, index: FusedVectorIndex, track_metadata: dict[str, dict],
              top_k: int, query_vec: np.ndarray | None = None,
-             graph: nx.DiGraph | None = None) -> list[dict]:
+             graph: nx.DiGraph | None = None,
+             modality_weights: tuple[float, float, float] | None = None) -> list[dict]:
     """Return the top_k retrieved tracks as dicts ready for
     prompt_templates.build_context_block, most similar first.
 
@@ -83,6 +87,9 @@ def retrieve(query_text: str, index: FusedVectorIndex, track_metadata: dict[str,
     """
     if query_vec is None:
         query_vec = embed_query(query_text)
+    if modality_weights is not None:
+        # Opt-in per-query weighting (see query_router.py); default is the baseline.
+        query_vec = fusion.apply_query_weights(query_vec, modality_weights)
     hits = index.search(query_vec, top_k)
 
     results = []
@@ -98,12 +105,15 @@ def retrieve(query_text: str, index: FusedVectorIndex, track_metadata: dict[str,
         }
         if graph is not None:
             hood = song_neighborhood(graph, track_id)
+            titles = lambda ids: [track_metadata[t]["title"] for t in ids if t in track_metadata]
             result["graph"] = {
                 "album": hood["album"],
-                "same_artist_tracks": [track_metadata[t]["title"] for t in hood["same_artist_tracks"]
-                                       if t in track_metadata],
-                "same_genre_tracks": [track_metadata[t]["title"] for t in hood["same_genre_tracks"]
-                                      if t in track_metadata],
+                "same_artist_tracks": titles(hood["same_artist_tracks"]),
+                # A genre can hold hundreds of songs; the prompt only needs a few
+                # examples and the total, so the list is capped here.
+                "same_genre_tracks": titles(hood["same_genre_tracks"])[:MAX_GENRE_EXAMPLES],
+                "same_genre_count": len(hood["same_genre_tracks"]),
+                "similar_tracks": titles(hood["similar_tracks"]),
             }
         results.append(result)
     return results

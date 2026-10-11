@@ -115,6 +115,31 @@ keeping with the subprocess-isolation design above — `embed_query()`'s
 full subprocess pipeline is instead exercised live by
 `scripts/run_pipeline.py` and `scripts/answer_query.py`.
 
+## Limitations
+
+- **Genre labels are curated by hand.** Each artist is assigned one genre
+  in `data/processed/artist_seeds.json`; iTunes' own genre tags are too
+  noisy to use. The scaled genre-level evaluation therefore measures
+  agreement with those labels, not with an independent ground truth, and
+  it says nothing about finer attributes such as mood.
+- **Some bios come from the artist's article, not the song's.** Many songs
+  have no Wikipedia article of their own. A bio is only kept if the text
+  mentions the song title or the artist, and the ingestion report records
+  which source each track used, so tracks by one artist can share the same
+  bio text.
+- **The groundedness judge is an LLM.** Claims in a generated answer are
+  checked by a Gemini model, so its verdicts are an estimate and can share
+  blind spots with the model that wrote the answer. The leaked-title check
+  (does the answer name a song that was never retrieved?) is the objective
+  part.
+- **Query latency is slow by design.** Each query loads the three encoders
+  one at a time in separate processes to stay within a small memory budget,
+  which takes around a minute per query. Retrieval itself (the FAISS
+  search) takes well under a millisecond.
+- **Small evaluation sets.** The hand-labelled evaluation has 14 queries
+  over 18 tracks, so differences of a few hundredths in precision@k are
+  within noise.
+
 ## Scope
 
 No fine-tuning of any encoder or the LLM — every model runs via

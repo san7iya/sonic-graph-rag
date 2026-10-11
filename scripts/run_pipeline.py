@@ -11,7 +11,6 @@ final answer come from actually running the pipeline.
 
 from __future__ import annotations
 
-import csv
 import sys
 from pathlib import Path
 
@@ -29,11 +28,6 @@ from scripts.encode_modality import cache_path, run_encoder_subprocess
 # subprocess reliably crashes (confirmed by reproducible access
 # violations). Keeping the parent minimal until all subprocess spawning
 # is done avoids that.
-
-
-def load_seed_tracks() -> list[dict]:
-    with open(config.SEED_TRACKS_CSV, newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
 
 
 def valid_tracks_with_bios() -> tuple[list[dict], dict[str, str]]:
@@ -83,8 +77,8 @@ def run_query(index: FusedVectorIndex, track_metadata: dict[str, dict], query: s
     from src.rag import llm_client, prompt_templates, retriever
 
     print(f"\n=== Query: {query!r} ===")
-    from src.graph.build_graph import build_graph
-    graph = build_graph(valid_rows)
+    from src.graph.build_graph import build_graph_with_similarity
+    graph = build_graph_with_similarity(valid_rows, index)
     hits = retriever.retrieve(query, index, track_metadata, top_k, query_vec=query_vec, graph=graph)
     for i, hit in enumerate(hits, start=1):
         print(f"  [{i}] {hit['title']} — {hit['artist']} (similarity={hit['similarity']:.4f})")

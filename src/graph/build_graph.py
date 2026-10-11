@@ -8,6 +8,7 @@ curated metadata, so there is nothing for an encoder to guess at.
 from __future__ import annotations
 
 import networkx as nx
+import numpy as np
 
 from src.graph import schema
 
@@ -38,4 +39,44 @@ def build_graph(track_rows: list[dict]) -> nx.DiGraph:
         graph.add_edge(song, artist, relation=schema.PERFORMED_BY)
         graph.add_edge(song, album, relation=schema.BELONGS_TO_ALBUM)
         graph.add_edge(song, genre, relation=schema.HAS_GENRE)
+    return graph
+
+
+def add_similarity_edges(graph: nx.DiGraph, track_ids: list[str], fused_vectors: np.ndarray, k: int = 3) -> int:
+    """Add Song -SIMILAR_TO-> Song edges to each song's k nearest
+    neighbours in fused-embedding space; returns the number of edges added.
+
+    Why: the metadata edges only say what a curator wrote down (artist,
+    album, genre). SIMILAR_TO edges bring the learned multi-modal
+    similarity into the graph itself, so a hop from a retrieved song also
+    reaches songs that sound / read / look alike even when they share no
+    metadata. The edge weight is the inner product of the fused vectors,
+    so the evidence strength travels with the edge. Edges are directed
+    (A's top-k need not include B), which matches how kNN behaves.
+    """
+    sims = fused_vectors @ fused_vectors.T
+    np.fill_diagonal(sims, -np.inf)
+    k = min(k, len(track_ids) - 1)
+    added = 0
+    for i, track_id in enumerate(track_ids):
+        for j in np.argsort(-sims[i])[:k]:
+            graph.add_edge(schema.node_id(schema.SONG, track_id),
+                           schema.node_id(schema.SONG, track_ids[j]),
+                           relation=schema.SIMILAR_TO, weight=float(sims[i, j]))
+            added += 1
+    return added
+
+
+def build_graph_with_similarity(track_rows: list[dict], index, k: int = 3) -> nx.DiGraph:
+    """Metadata graph plus SIMILAR_TO edges computed from a FusedVectorIndex.
+
+    Reads the fused vectors back out of the index (so the graph and the
+    retrieval index are guaranteed to describe the same vectors), and only
+    for tracks that are in both the rows and the index.
+    """
+    graph = build_graph(track_rows)
+    all_vectors = index.index.reconstruct_n(0, index.index.ntotal)
+    wanted = {r["track_id"] for r in track_rows}
+    keep = [i for i, t in enumerate(index.track_ids) if t in wanted]
+    add_similarity_edges(graph, [index.track_ids[i] for i in keep], all_vectors[keep], k)
     return graph

@@ -32,7 +32,8 @@ def songs_in_genre(graph: nx.DiGraph, genre: str) -> list[str]:
 
 def song_neighborhood(graph: nx.DiGraph, track_id: str) -> dict:
     """1-hop expansion of one song: its artist, album, genre, plus the
-    other songs sharing its artist or genre.
+    other songs sharing its artist or genre, and its embedding-similar
+    songs (SIMILAR_TO edges, most similar first, if the graph has them).
 
     Why this exists: vector retrieval only knows "similar embedding";
     the graph adds explicit relational facts (same artist, same album)
@@ -41,11 +42,15 @@ def song_neighborhood(graph: nx.DiGraph, track_id: str) -> dict:
     """
     song = schema.node_id(schema.SONG, track_id)
     neighborhood = {"artist": None, "album": None, "genre": None,
-                    "same_artist_tracks": [], "same_genre_tracks": []}
+                    "same_artist_tracks": [], "same_genre_tracks": [], "similar_tracks": []}
     if song not in graph:
         return neighborhood
 
+    similar = []
     for _, target, data in graph.out_edges(song, data=True):
+        if data["relation"] == schema.SIMILAR_TO:   # target is a Song node (has no "name")
+            similar.append((data["weight"], graph.nodes[target]["track_id"]))
+            continue
         name = graph.nodes[target]["name"]
         if data["relation"] == schema.PERFORMED_BY:
             neighborhood["artist"] = name
@@ -57,4 +62,5 @@ def song_neighborhood(graph: nx.DiGraph, track_id: str) -> dict:
             neighborhood["genre"] = name
             neighborhood["same_genre_tracks"] = [
                 t for t in _songs_pointing_at(graph, target) if t != track_id]
+    neighborhood["similar_tracks"] = [t for _, t in sorted(similar, reverse=True)]
     return neighborhood

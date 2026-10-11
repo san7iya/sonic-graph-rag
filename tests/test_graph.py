@@ -50,3 +50,33 @@ def test_context_block_includes_graph_facts():
              "graph": {"album": "Alb", "same_artist_tracks": ["Other"], "same_genre_tracks": []}}
     block = build_context_block([track])
     assert 'album "Alb"' in block and "Other" in block and "none" in block
+
+
+def test_similarity_edges_link_nearest_songs_and_show_in_neighborhood():
+    import numpy as np
+    from src.graph.build_graph import add_similarity_edges
+    from src.graph import schema
+
+    graph = build_graph(ROWS)
+    ids = ["m1", "m2", "t1", "q1"]
+    vecs = np.array([[1, 0], [0.99, 0.1], [0.9, 0.3], [0, 1]], dtype=float)
+    vecs /= np.linalg.norm(vecs, axis=1, keepdims=True)
+    added = add_similarity_edges(graph, ids, vecs, k=2)
+
+    assert added == 8
+    hood = song_neighborhood(graph, "m1")
+    assert hood["similar_tracks"] == ["m2", "t1"]            # most similar first
+    assert graph["Song:m1"]["Song:m2"]["relation"] == schema.SIMILAR_TO
+    # metadata queries are unaffected by the extra Song->Song edges
+    assert songs_by_artist(graph, "Bob Marley") == ["m1", "m2"]
+    assert hood["artist"] == "Bob Marley"
+
+
+def test_context_block_caps_genre_list_and_lists_similar():
+    from src.rag.prompt_templates import build_context_block
+
+    track = {"title": "T", "artist": "A", "genre": "g", "bio": "b", "similarity": 0.5,
+             "graph": {"album": "Alb", "same_artist_tracks": [], "same_genre_tracks": ["x", "y"],
+                       "same_genre_count": 12, "similar_tracks": ["S1", "S2"]}}
+    block = build_context_block([track])
+    assert "(+10 more)" in block and "S1, S2" in block

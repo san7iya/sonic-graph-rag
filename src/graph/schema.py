@@ -18,6 +18,9 @@ GENRE = "Genre"
 PERFORMED_BY = "PERFORMED_BY"
 BELONGS_TO_ALBUM = "BELONGS_TO_ALBUM"
 HAS_GENRE = "HAS_GENRE"
+# Song -> Song edge added from embedding similarity (not from metadata);
+# carries a "weight" attribute: the fused inner-product score.
+SIMILAR_TO = "SIMILAR_TO"
 
 
 def node_id(node_type: str, name: str) -> str:

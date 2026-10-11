@@ -33,11 +33,15 @@ def build_context_block(retrieved_tracks: list[dict]) -> str:
         )
         graph = track.get("graph")
         if graph:
+            more = graph.get("same_genre_count", len(graph["same_genre_tracks"])) - len(graph["same_genre_tracks"])
             block += (
                 f"\nGraph facts: album \"{graph['album']}\"; "
                 f"other songs by this artist: {', '.join(graph['same_artist_tracks']) or 'none'}; "
                 f"other songs in this genre: {', '.join(graph['same_genre_tracks']) or 'none'}"
+                + (f" (+{more} more)" if more > 0 else "")
             )
+            if graph.get("similar_tracks"):
+                block += f"; most similar by audio/text/image embedding: {', '.join(graph['similar_tracks'])}"
         blocks.append(block)
     return "\n\n".join(blocks)
 

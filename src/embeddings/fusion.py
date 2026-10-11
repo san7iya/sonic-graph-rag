@@ -39,3 +39,20 @@ def fuse_embeddings(text_vec: np.ndarray, image_vec: np.ndarray, audio_vec: np.n
         f"expected fused dim {config.FUSED_EMBED_DIM}, got {fused.shape[0]}"
     )
     return fused
+
+
+def apply_query_weights(query_vec: np.ndarray, weights: tuple[float, float, float]) -> np.ndarray:
+    """Scale a fused *query* vector's three blocks by modality weights.
+
+    Why only the query: the indexed track vectors stay the plain baseline
+    concatenation, and the inner product of (w_m * q_m) with t_m summed
+    over blocks is exactly sum_m w_m * cos(q_m, t_m). So weighting needs no
+    re-indexing and the baseline can be recovered by passing equal weights.
+    Weights are multiplied by 3 so equal weights (1/3 each) are the
+    identity, keeping scores on the same scale as the baseline.
+    """
+    scaled = query_vec.copy()
+    bounds = np.cumsum([0, config.TEXT_EMBED_DIM, config.IMAGE_EMBED_DIM, config.AUDIO_EMBED_DIM])
+    for w, lo, hi in zip(weights, bounds[:-1], bounds[1:]):
+        scaled[lo:hi] *= 3 * w
+    return scaled

@@ -71,6 +71,28 @@ with st.sidebar:
         "fresh process. A query typically takes 5-15s for that reason."
     )
 
+def graph_dot(hits: list[dict]) -> str:
+    """Graphviz DOT for the retrieved songs and their 1-hop neighbourhood.
+
+    Built from the same graph facts the LLM saw, so the picture shows
+    exactly what the relational context was, not a separate lookup.
+    """
+    def q(text: str) -> str:
+        return '"' + str(text).replace('"', "'") + '"'
+
+    lines = ["digraph G {", "rankdir=LR;", 'node [fontsize=10, shape=box, style="rounded,filled", fillcolor="#eef"];']
+    for hit in hits:
+        song = q(hit["title"])
+        lines.append(f'{song} [fillcolor="#cfe8ff", penwidth=2];')
+        lines.append(f'{song} -> {q(hit["artist"])} [label="PERFORMED_BY"];')
+        lines.append(f'{song} -> {q(hit["graph"]["album"])} [label="BELONGS_TO_ALBUM"];')
+        lines.append(f'{song} -> {q(hit["genre"])} [label="HAS_GENRE"];')
+        for other in hit["graph"].get("similar_tracks", []):
+            lines.append(f'{song} -> {q(other)} [style=dashed, color="#c0392b", label="SIMILAR_TO"];')
+    lines.append("}")
+    return "\n".join(lines)
+
+
 query = st.text_input(
     "Ask a question about the music collection",
     value="Which songs have an upbeat, danceable feel?",
@@ -105,8 +127,14 @@ if submitted and query.strip():
                     st.markdown(
                         f"- Album: {g['album']}\n"
                         f"- Same artist: {', '.join(g['same_artist_tracks']) or 'none'}\n"
-                        f"- Same genre: {len(g['same_genre_tracks'])} other tracks"
+                        f"- Same genre: {g.get('same_genre_count', len(g['same_genre_tracks']))} other tracks\n"
+                        f"- Most similar by embedding: {', '.join(g.get('similar_tracks', [])) or 'none'}"
                     )
+
+        with st.expander("Knowledge graph around the results"):
+            st.graphviz_chart(graph_dot(result["hits"]))
+            st.caption("Solid arrows are metadata edges (PERFORMED_BY, BELONGS_TO_ALBUM, HAS_GENRE); "
+                       "dashed arrows are SIMILAR_TO edges from the fused embeddings.")
 
         st.divider()
         st.subheader("Gemini answer (grounded in the context above)")

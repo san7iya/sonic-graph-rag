@@ -50,13 +50,13 @@ if __name__ == "__main__":
 
     from src.embeddings import fusion
     from src.evaluation.groundedness_check import judge_claims, unretrieved_titles_mentioned
-    from src.graph.build_graph import build_graph
+    from src.graph.build_graph import build_graph_with_similarity
     from src.rag import prompt_templates, retriever
 
     eval_set = json.loads(EVAL_QUERIES_JSON.read_text(encoding="utf-8"))
     valid_rows, bios = valid_tracks_with_bios()
     index, track_metadata = assemble_index(valid_rows, bios)
-    graph = build_graph(valid_rows)
+    graph = build_graph_with_similarity(valid_rows, index)
     catalog_titles = [m["title"] for m in track_metadata.values()]
     qvecs = {m: dict(np.load(eval_query_cache_path(m))) for m in MODALITIES}
 
