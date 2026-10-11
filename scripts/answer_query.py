@@ -41,7 +41,9 @@ if __name__ == "__main__":
     index, track_metadata = assemble_index(valid_rows, bios)
 
     from src.rag import llm_client, prompt_templates
-    hits = retriever.retrieve(args.query, index, track_metadata, args.top_k, query_vec=query_vec)
+    from src.graph.build_graph import build_graph
+    graph = build_graph(valid_rows)
+    hits = retriever.retrieve(args.query, index, track_metadata, args.top_k, query_vec=query_vec, graph=graph)
     prompt = prompt_templates.build_rag_prompt(args.query, hits)
     answer = llm_client.generate_answer(prompt)
 

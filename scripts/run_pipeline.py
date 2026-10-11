@@ -81,7 +81,8 @@ def assemble_index(valid_rows: list[dict], bios: dict[str, str]) -> tuple[FusedV
 
         index.add(track_id, fused_vec)
         track_metadata[track_id] = {
-            "title": row["title"], "artist": row["artist"], "genre": row["genre"], "bio": bios[track_id],
+            "title": row["title"], "artist": row["artist"], "genre": row["genre"],
+            "album": row["album"], "bio": bios[track_id],
         }
         print(f"[OK] {track_id}: text{text_vec.shape} image{image_vec.shape} "
               f"audio{audio_vec.shape} -> fused{fused_vec.shape}")
@@ -90,13 +91,17 @@ def assemble_index(valid_rows: list[dict], bios: dict[str, str]) -> tuple[FusedV
 
 
 def run_query(index: FusedVectorIndex, track_metadata: dict[str, dict], query: str, top_k: int,
-              query_vec: np.ndarray) -> None:
+              query_vec: np.ndarray, valid_rows: list[dict]) -> None:
     from src.rag import llm_client, prompt_templates, retriever
 
     print(f"\n=== Query: {query!r} ===")
-    hits = retriever.retrieve(query, index, track_metadata, top_k, query_vec=query_vec)
+    from src.graph.build_graph import build_graph
+    graph = build_graph(valid_rows)
+    hits = retriever.retrieve(query, index, track_metadata, top_k, query_vec=query_vec, graph=graph)
     for i, hit in enumerate(hits, start=1):
         print(f"  [{i}] {hit['title']} — {hit['artist']} (similarity={hit['similarity']:.4f})")
+        print(f"      graph: album={hit['graph']['album']!r}, "
+              f"same artist={hit['graph']['same_artist_tracks']}")
 
     prompt = prompt_templates.build_rag_prompt(query, hits)
     answer = llm_client.generate_answer(prompt)
@@ -122,4 +127,4 @@ if __name__ == "__main__":
     index, track_metadata = assemble_index(valid_rows, bios)
     print(f"\nIndexed {len(track_metadata)} tracks.")
 
-    run_query(index, track_metadata, query_text, top_k=5, query_vec=query_vec)
+    run_query(index, track_metadata, query_text, top_k=5, query_vec=query_vec, valid_rows=valid_rows)

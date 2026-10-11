@@ -1,0 +1,16 @@
+[
+  {"query": "reggae music with a laid-back island rhythm", "relevant": ["bob_marley_no_woman_no_cry", "bob_marley_three_little_birds", "toots_maytals_pressure_drop"]},
+  {"query": "classical orchestral music", "relevant": ["beethoven_symphony_no_5", "vivaldi_spring", "mozart_eine_kleine_nachtmusik"]},
+  {"query": "jazz improvisation", "relevant": ["miles_davis_so_what", "john_coltrane_giant_steps", "louis_armstrong_what_a_wonderful_world"]},
+  {"query": "rap with lyrics about struggle and ambition", "relevant": ["eminem_lose_yourself", "kendrick_lamar_alright", "notorious_big_juicy"]},
+  {"query": "guitar-driven rock", "relevant": ["queen_bohemian_rhapsody", "nirvana_smells_like_teen_spirit", "led_zeppelin_stairway_to_heaven"]},
+  {"query": "catchy mainstream pop hit", "relevant": ["michael_jackson_billie_jean", "madonna_like_a_prayer", "taylor_swift_shake_it_off"]},
+  {"query": "an uplifting, optimistic song about hope", "relevant": ["bob_marley_three_little_birds", "louis_armstrong_what_a_wonderful_world", "kendrick_lamar_alright", "bob_marley_no_woman_no_cry"]},
+  {"query": "grunge anthem of teenage angst", "relevant": ["nirvana_smells_like_teen_spirit"]},
+  {"query": "songs by Bob Marley", "relevant": ["bob_marley_no_woman_no_cry", "bob_marley_three_little_birds"]},
+  {"query": "calm instrumental music with no vocals", "relevant": ["miles_davis_so_what", "john_coltrane_giant_steps", "beethoven_symphony_no_5", "vivaldi_spring", "mozart_eine_kleine_nachtmusik"]},
+  {"query": "1980s pop star", "relevant": ["michael_jackson_billie_jean", "madonna_like_a_prayer"]},
+  {"query": "music by a composer from the eighteenth or nineteenth century", "relevant": ["beethoven_symphony_no_5", "vivaldi_spring", "mozart_eine_kleine_nachtmusik"]},
+  {"query": "Jamaican music", "relevant": ["bob_marley_no_woman_no_cry", "bob_marley_three_little_birds", "toots_maytals_pressure_drop"]},
+  {"query": "rock song with operatic vocals and multiple sections", "relevant": ["queen_bohemian_rhapsody"]}
+]

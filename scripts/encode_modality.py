@@ -106,6 +106,10 @@ def query_cache_path(modality: str) -> Path:
     return config.CACHE_DIR / f"query_{modality}_vector.npy"
 
 
+def eval_query_cache_path(modality: str) -> Path:
+    return config.CACHE_DIR / f"eval_query_{modality}_vectors.npz"
+
+
 def _encode_query_text(modality: str, query: str) -> np.ndarray:
     """Encode one query string through the given modality's own *text*
     tower (see retriever.py for why: this is what makes a text query
@@ -127,11 +131,21 @@ if __name__ == "__main__":
     parser.add_argument("--query", default=None,
                          help="Encode this single query string (through the modality's text "
                               "tower) instead of batch-encoding the seed track corpus.")
+    parser.add_argument("--queries-file", default=None,
+                         help="JSON list of query strings; encode them all in this one process "
+                              "(model loaded once) and write eval_query_<modality>_vectors.npz, "
+                              "keyed q0, q1, ... Used by scripts/run_evaluation.py.")
     args = parser.parse_args()
 
     config.CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-    if args.query is not None:
+    if args.queries_file is not None:
+        import json
+        queries = json.loads(Path(args.queries_file).read_text(encoding="utf-8"))
+        vecs = {f"q{i}": _encode_query_text(args.modality, q) for i, q in enumerate(queries)}
+        np.savez(eval_query_cache_path(args.modality), **vecs)
+        print(f"[{args.modality}] wrote {len(vecs)} query vectors to {eval_query_cache_path(args.modality)}")
+    elif args.query is not None:
         vec = _encode_query_text(args.modality, args.query)
         np.save(query_cache_path(args.modality), vec)
         print(f"[{args.modality}] wrote {query_cache_path(args.modality)}")

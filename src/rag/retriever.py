@@ -1,9 +1,8 @@
 """Query -> embed -> top-k retrieval against the fused FAISS index.
 
-For Milestone 0 this is embed + top-k only. Graph expansion (pulling in
-each retrieved song's artist/album/genre neighborhood from the knowledge
-graph) is Milestone 4 — the graph doesn't exist yet at this stage, so
-there is nothing to expand into.
+Retrieval is embed + top-k, optionally followed by 1-hop graph expansion
+(each retrieved song's album and same-artist / same-genre songs from the
+knowledge graph in src/graph).
 
 Query embedding mirrors fusion.py's shape: a 384+512+512 vector built
 from each model's own *text* tower (MiniLM directly, CLIP's and CLAP's
@@ -16,9 +15,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import networkx as nx
 import numpy as np
 
 from src.embeddings import fusion
+from src.graph.graph_utils import song_neighborhood
 from scripts.encode_modality import query_cache_path, run_encoder_subprocess
 
 if TYPE_CHECKING:
@@ -46,9 +47,15 @@ def embed_query(query_text: str) -> np.ndarray:
 
 
 def retrieve(query_text: str, index: FusedVectorIndex, track_metadata: dict[str, dict],
-             top_k: int, query_vec: np.ndarray | None = None) -> list[dict]:
+             top_k: int, query_vec: np.ndarray | None = None,
+             graph: nx.DiGraph | None = None) -> list[dict]:
     """Return the top_k retrieved tracks as dicts ready for
     prompt_templates.build_context_block, most similar first.
+
+    If a knowledge graph is passed, each hit also gets a "graph" entry
+    (1-hop expansion: album plus other songs by the same artist / in the
+    same genre, as titles) so the LLM can answer relational questions
+    from explicit edges rather than from embedding similarity alone.
 
     query_vec lets a caller pass an already-embedded query instead of
     embedding it here — run_pipeline.py uses this to embed the query
@@ -63,12 +70,22 @@ def retrieve(query_text: str, index: FusedVectorIndex, track_metadata: dict[str,
     results = []
     for track_id, similarity in hits:
         meta = track_metadata[track_id]
-        results.append({
+        result = {
             "track_id": track_id,
             "title": meta["title"],
             "artist": meta["artist"],
             "genre": meta["genre"],
             "bio": meta["bio"],
             "similarity": similarity,
-        })
+        }
+        if graph is not None:
+            hood = song_neighborhood(graph, track_id)
+            result["graph"] = {
+                "album": hood["album"],
+                "same_artist_tracks": [track_metadata[t]["title"] for t in hood["same_artist_tracks"]
+                                       if t in track_metadata],
+                "same_genre_tracks": [track_metadata[t]["title"] for t in hood["same_genre_tracks"]
+                                      if t in track_metadata],
+            }
+        results.append(result)
     return results

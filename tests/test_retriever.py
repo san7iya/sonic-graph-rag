@@ -53,3 +53,21 @@ def test_retrieve_attaches_graph_metadata_to_each_hit():
     assert top_hit["genre"] == "rock"
     assert top_hit["bio"] == "bio a"
     assert isinstance(top_hit["similarity"], float)
+
+
+def test_retrieve_with_graph_adds_one_hop_expansion():
+    from src.graph.build_graph import build_graph
+
+    index, track_metadata = build_index_and_metadata()
+    track_metadata["song_c"] = {"title": "Song C", "artist": "Artist A", "genre": "rock", "bio": "bio c"}
+    for tid, m in track_metadata.items():
+        m["album"] = f"Album {tid}"
+    rows = [{"track_id": t, **{k: m[k] for k in ("title", "artist", "genre", "album")}}
+            for t, m in track_metadata.items()]
+    graph = build_graph(rows)
+
+    hits = retrieve("q", index, track_metadata, top_k=1,
+                    query_vec=unit_vector(np.array([1.0, 0, 0, 0])), graph=graph)
+
+    assert hits[0]["graph"]["album"] == "Album song_a"
+    assert hits[0]["graph"]["same_artist_tracks"] == ["Song C"]

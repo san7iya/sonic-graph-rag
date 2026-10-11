@@ -26,11 +26,19 @@ def build_context_block(retrieved_tracks: list[dict]) -> str:
     """
     blocks = []
     for i, track in enumerate(retrieved_tracks, start=1):
-        blocks.append(
+        block = (
             f"[{i}] \"{track['title']}\" by {track['artist']} (genre: {track['genre']}, "
             f"similarity: {track['similarity']:.3f})\n"
             f"Bio: {track['bio']}"
         )
+        graph = track.get("graph")
+        if graph:
+            block += (
+                f"\nGraph facts: album \"{graph['album']}\"; "
+                f"other songs by this artist: {', '.join(graph['same_artist_tracks']) or 'none'}; "
+                f"other songs in this genre: {', '.join(graph['same_genre_tracks']) or 'none'}"
+            )
+        blocks.append(block)
     return "\n\n".join(blocks)
 
 

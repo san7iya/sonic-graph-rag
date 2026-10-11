@@ -1,0 +1,147 @@
+"""Milestone 6 evaluation: precision@k, MRR, per-modality score breakdown
+and latency for the baseline fused retriever, written to results.md.
+
+Compares four rankings of the same corpus so the fusion choice can be
+judged with numbers instead of asserted:
+  fused (baseline), text-only, image-only, audio-only.
+Each single-modality ranking uses just that modality's block of the
+query/track vectors (cosine similarity on unit vectors).
+
+Gemini is NOT called here: this measures retrieval, which is what the
+fused embedding controls. Groundedness of generated answers is a
+separate check.
+"""
+
+from __future__ import annotations
+
+import json
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from src import config
+from scripts.encode_modality import cache_path, eval_query_cache_path, run_encoder_subprocess
+
+K = 3
+MODALITIES = ("text", "image", "audio")
+EVAL_QUERIES_JSON = config.PROCESSED_DIR / "eval_queries.json"
+RESULTS_MD = config.ROOT_DIR / "results.md"
+
+
+def unit(v: np.ndarray) -> np.ndarray:
+    return v / np.linalg.norm(v)
+
+
+if __name__ == "__main__":
+    from scripts.run_pipeline import valid_tracks_with_bios
+
+    eval_set = json.loads(EVAL_QUERIES_JSON.read_text(encoding="utf-8"))
+    queries = [e["query"] for e in eval_set]
+    valid_rows, _ = valid_tracks_with_bios()
+    track_ids = [r["track_id"] for r in valid_rows]
+
+    # --- Encode all queries (one model load per modality) BEFORE importing
+    # faiss, same memory-ordering reason as run_pipeline.py. ---
+    queries_file = config.CACHE_DIR / "eval_queries.json"
+    queries_file.write_text(json.dumps(queries), encoding="utf-8")
+    batch_seconds = {}
+    for modality in MODALITIES:
+        t0 = time.perf_counter()
+        run_encoder_subprocess([modality, "--queries-file", str(queries_file)])
+        batch_seconds[modality] = time.perf_counter() - t0
+
+    # Real single-query latency through the production path
+    # (embed_query = 3 separate subprocess model loads).
+    from src.rag import retriever
+    single_query_seconds = []
+    for q in queries[:3]:
+        t0 = time.perf_counter()
+        retriever.embed_query(q)
+        single_query_seconds.append(time.perf_counter() - t0)
+
+    from src.embeddings import fusion
+    from src.indexing.faiss_index import FusedVectorIndex
+    from src.evaluation.precision_at_k import precision_at_k, reciprocal_rank
+
+    # --- Load cached corpus + query vectors ---
+    corpus = {m: dict(np.load(cache_path(m))) for m in MODALITIES}
+    query_vecs = {m: dict(np.load(eval_query_cache_path(m))) for m in MODALITIES}
+
+    index = FusedVectorIndex(dim=config.FUSED_EMBED_DIM)
+    for tid in track_ids:
+        index.add(tid, fusion.fuse_embeddings(*(corpus[m][tid] for m in MODALITIES)))
+
+    # Per-modality corpus matrices, rows aligned with track_ids.
+    corpus_mat = {m: np.stack([unit(corpus[m][tid]) for tid in track_ids]) for m in MODALITIES}
+
+    systems = ("fused",) + MODALITIES
+    p_at_k = {s: [] for s in systems}
+    rr = {s: [] for s in systems}
+    search_ms = []
+    top1_contrib = []        # per-modality cosine of fused top-1 hit
+    rows_md = []
+
+    for i, entry in enumerate(eval_set):
+        relevant = set(entry["relevant"])
+        qv = {m: unit(query_vecs[m][f"q{i}"]) for m in MODALITIES}
+
+        t0 = time.perf_counter()
+        fused_hits = index.search(fusion.fuse_embeddings(*(qv[m] for m in MODALITIES)), len(track_ids))
+        search_ms.append((time.perf_counter() - t0) * 1000)
+        rankings = {"fused": [tid for tid, _ in fused_hits]}
+        for m in MODALITIES:
+            scores = corpus_mat[m] @ qv[m]
+            rankings[m] = [track_ids[j] for j in np.argsort(-scores)]
+
+        for s in systems:
+            p_at_k[s].append(precision_at_k(rankings[s], relevant, K))
+            rr[s].append(reciprocal_rank(rankings[s], relevant))
+
+        top1 = rankings["fused"][0]
+        top1_contrib.append([float(corpus_mat[m][track_ids.index(top1)] @ qv[m]) for m in MODALITIES])
+        rows_md.append(f"| {entry['query']} | {len(relevant)} | "
+                       + " | ".join(f"{p_at_k[s][-1]:.2f}" for s in systems) + " | "
+                       + ", ".join(t for t in rankings['fused'][:K]) + " |")
+
+    contrib = np.array(top1_contrib)
+    # Spread of cosine values across ALL tracks per modality: shows which
+    # modality's scores vary most, i.e. dominates the fused ranking.
+    spread = {}
+    for m in MODALITIES:
+        all_scores = np.concatenate([corpus_mat[m] @ unit(query_vecs[m][f"q{i}"]) for i in range(len(queries))])
+        spread[m] = (float(all_scores.mean()), float(all_scores.std()))
+
+    lines = [
+        "# Evaluation results", "",
+        f"Corpus: {len(track_ids)} tracks. Queries: {len(queries)} (labels in `data/processed/eval_queries.json`, "
+        f"written by hand). Metrics at k={K}. Generated by `scripts/run_evaluation.py`; no LLM involved.", "",
+        "## Retrieval quality", "",
+        "| System | mean P@%d | MRR |" % K, "|---|---|---|",
+    ]
+    for s in systems:
+        lines.append(f"| {s} | {np.mean(p_at_k[s]):.3f} | {np.mean(rr[s]):.3f} |")
+    lines += ["", "## Per-query P@%d" % K, "",
+              "| Query | #relevant | " + " | ".join(systems) + " | fused top-%d |" % K,
+              "|---|---|" + "---|" * (len(systems) + 1)] + rows_md
+    lines += ["", "## Per-modality cosine scores (scale check)", "",
+              "Mean / std of query-to-track cosine over all queries x all tracks. The modality with the "
+              "larger spread contributes more to rank differences in the fused inner product.", "",
+              "| Modality | mean | std |", "|---|---|---|"]
+    for m in MODALITIES:
+        lines.append(f"| {m} | {spread[m][0]:.3f} | {spread[m][1]:.3f} |")
+    lines += ["", "Mean per-modality cosine of the fused top-1 hit: "
+              + ", ".join(f"{m}={contrib[:, j].mean():.3f}" for j, m in enumerate(MODALITIES)), "",
+              "## Latency", "",
+              f"- Embedding a single query via the production path (3 subprocess model loads): "
+              f"{np.mean(single_query_seconds):.1f}s mean over {len(single_query_seconds)} queries "
+              f"({', '.join(f'{x:.1f}' for x in single_query_seconds)}s)",
+              f"- Batch-encoding all {len(queries)} queries (one load per modality): "
+              + ", ".join(f"{m} {batch_seconds[m]:.1f}s" for m in MODALITIES),
+              f"- FAISS search over {len(track_ids)} tracks: {np.mean(search_ms):.3f} ms mean per query",
+              "- LLM generation latency: not measured here"]
+    RESULTS_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print("\n".join(lines))
