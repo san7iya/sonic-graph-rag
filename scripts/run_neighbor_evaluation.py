@@ -48,5 +48,19 @@ if __name__ == "__main__":
     if len(counts) < 6 or min(counts.values()) < 10:
         lines += ["", "**Note: the encoded corpus is still small or unbalanced across genres; treat these "
                       "numbers as provisional.**"]
+    # Does a shared artist-level bio inflate same-artist matches in text space?
+    # Same-artist@K in the text space, split by where each track's bio came from.
+    artists = [tracks[t]["artist"] for t in ids]
+    sources = [tracks[t].get("bio_source", "seed") for t in ids]
+    groups = {src: [i for i, s in enumerate(sources) if s == src] for src in sorted(set(sources))}
+    lines += ["", "## Bio source breakdown (text space and fused)", "",
+              "Tracks whose bio is the artist's article share text with that artist's other tracks, which could "
+              "inflate same-artist neighbours. Same-genre and same-artist neighbour rates by the query song's bio source:",
+              "", "| Bio source | tracks | text same-genre@%d | text same-artist@%d | fused same-artist@%d |" % (K, K, K),
+              "|---|---|---|---|---|"]
+    for src, rows_idx in groups.items():
+        lines.append(f"| {src} | {len(rows_idx)} | {same_genre_at_k(mats['text'], genres, K, rows_idx):.3f} | "
+                     f"{same_genre_at_k(mats['text'], artists, K, rows_idx):.3f} | "
+                     f"{same_genre_at_k(fused, artists, K, rows_idx):.3f} |")
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))

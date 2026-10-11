@@ -35,15 +35,14 @@ def embed_query(query_text: str) -> np.ndarray:
     """Build a fused query vector from one piece of text, using each
     modality model's own text tower so all three sub-spaces are non-zero.
 
-    Each modality is encoded in its own subprocess (see
-    scripts/encode_modality.py): this machine can't hold MiniLM, CLIP,
-    and CLAP loaded in the same process without crashing, so even a
-    single query is embedded one model-load at a time.
+    The query is embedded in one subprocess (see
+    scripts/encode_modality.py) that loads MiniLM, CLIP, and CLAP one
+    after another, releasing each before the next: this machine can't hold
+    all three resident at once, but a single process that never has more
+    than one alive avoids re-importing PyTorch three times.
     """
-    sub_vecs = []
-    for modality in ("text", "image", "audio"):
-        run_encoder_subprocess([modality, "--query", query_text])
-        sub_vecs.append(np.load(query_cache_path(modality)))
+    run_encoder_subprocess(["--query-all", query_text])
+    sub_vecs = [np.load(query_cache_path(m)) for m in ("text", "image", "audio")]
     return fusion.fuse_embeddings(*sub_vecs)
 
 

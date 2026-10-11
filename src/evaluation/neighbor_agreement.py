@@ -25,11 +25,20 @@ def nearest_neighbors(matrix: np.ndarray, k: int) -> np.ndarray:
     return np.argsort(-sims, axis=1)[:, :k]
 
 
-def same_genre_at_k(matrix: np.ndarray, genres: list[str], k: int) -> float:
-    """Mean fraction of each song's k nearest neighbours sharing its genre."""
+def same_genre_at_k(matrix: np.ndarray, genres: list[str], k: int, rows: list[int] | None = None) -> float:
+    """Mean fraction of each song's k nearest neighbours sharing its label.
+
+    The label can be anything per-song (genre, artist, ...), despite the
+    name. `rows` restricts which songs are scored (their neighbours are
+    still drawn from the whole corpus), so a subgroup such as "tracks whose
+    bio came from the artist article" can be evaluated on its own.
+    """
     labels = np.array(genres)
     neighbors = nearest_neighbors(matrix, k)
-    return float(np.mean(labels[neighbors] == labels[:, None]))
+    agree = labels[neighbors] == labels[:, None]
+    if rows is not None:
+        agree = agree[rows]
+    return float(np.mean(agree))
 
 
 def chance_same_genre(genres: list[str]) -> float:

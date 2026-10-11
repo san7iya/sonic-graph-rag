@@ -49,7 +49,7 @@ if __name__ == "__main__":
     from scripts.run_pipeline import assemble_index, valid_tracks_with_bios
 
     from src.embeddings import fusion
-    from src.evaluation.groundedness_check import judge_claims, unretrieved_titles_mentioned
+    from src.evaluation.groundedness_check import judge_claims, unretrieved_titles_mentioned, unsupported_specifics
     from src.graph.build_graph import build_graph_with_similarity
     from src.rag import prompt_templates, retriever
 
@@ -72,6 +72,7 @@ if __name__ == "__main__":
         qv = fusion.fuse_embeddings(*(unit(qvecs[m][f"q{i}"]) for m in MODALITIES))
         hits = retriever.retrieve(query, index, track_metadata, TOP_K, query_vec=qv, graph=graph)
         context = prompt_templates.build_context_block(hits)
+        rec["context"] = context   # kept so scripts/judge_audit.py can show it next to each claim
         try:
             if "answer" not in rec:
                 t0 = time.perf_counter()
@@ -102,7 +103,7 @@ if __name__ == "__main__":
         print("Not all queries complete yet; results.md not updated.")
         sys.exit(1)
 
-    rows_md, total_claims, total_supported, leak_count, judge_failures = [], 0, 0, 0, 0
+    rows_md, total_claims, total_supported, leak_count, judge_failures, specifics_count = [], 0, 0, 0, 0, 0
     answer_seconds = []
     for i, entry in enumerate(eval_set):
         rec = progress[entry["query"]]
@@ -110,6 +111,8 @@ if __name__ == "__main__":
         hits = retriever.retrieve(entry["query"], index, track_metadata, TOP_K, query_vec=qv, graph=graph)
         leaked = unretrieved_titles_mentioned(rec["answer"], [h["title"] for h in hits], catalog_titles)
         leak_count += bool(leaked)
+        specifics = unsupported_specifics(rec["answer"], prompt_templates.build_context_block(hits))
+        specifics_count += bool(specifics)
         answer_seconds.append(rec["answer_seconds"])
         if "claims" in rec:
             supported = sum(c["supported"] for c in rec["claims"])
@@ -121,7 +124,7 @@ if __name__ == "__main__":
             judge_failures += 1
             unsupported, verdict = [], f"judge failed ({rec['judge_error']})"
         rows_md.append(f"| {entry['query']} | {verdict} | {', '.join(leaked) or '-'} | "
-                       f"{'; '.join(unsupported) or '-'} |")
+                       f"{', '.join(specifics) or '-'} | {'; '.join(unsupported) or '-'} |")
 
     lines = [SECTION_MARK, "",
              f"{len(eval_set)} queries, top-{TOP_K} retrieval with graph expansion, answers from "
@@ -129,12 +132,14 @@ if __name__ == "__main__":
              f"- Claims supported by retrieved context: **{total_supported}/{total_claims}** "
              f"({100 * total_supported / max(total_claims, 1):.1f}%)",
              f"- Answers naming a catalogue song that was not retrieved: **{leak_count}/{len(eval_set)}**",
+             f"- Answers containing a number or name absent from the context: **{specifics_count}/{len(eval_set)}**",
              f"- Judge replies that failed to parse: {judge_failures}",
              f"- Gemini answer latency: {np.mean(answer_seconds):.1f}s mean "
              f"(min {min(answer_seconds):.1f}s, max {max(answer_seconds):.1f}s, includes retries)", "",
              "Caveat: the claim judge is also an LLM from the same vendor, so its verdicts "
-             "are an estimate; the leaked-title check is the objective one.", "",
-             "| Query | supported claims | leaked titles | unsupported claims |", "|---|---|---|---|"] + rows_md
+             "are an estimate; the leaked-title and number/name checks are the objective ones.", "",
+             "| Query | supported claims | leaked titles | numbers/names not in context | unsupported claims |",
+             "|---|---|---|---|---|"] + rows_md
     existing = RESULTS_MD.read_text(encoding="utf-8") if RESULTS_MD.exists() else ""
     base = existing.split(SECTION_MARK)[0].rstrip() + "\n\n" if existing else ""
     RESULTS_MD.write_text(base + "\n".join(lines) + "\n", encoding="utf-8")

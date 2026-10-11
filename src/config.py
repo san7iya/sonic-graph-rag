@@ -66,5 +66,30 @@ FUSED_EMBED_DIM = TEXT_EMBED_DIM + IMAGE_EMBED_DIM + AUDIO_EMBED_DIM  # 1408
 CHUNK_SIZE_TOKENS = 300
 CHUNK_OVERLAP_RATIO = 0.175  # midpoint of the 15-20% spec
 
+# Prepend "Title by Artist, from the album Album." to every cleaned bio
+# (scripts/preprocess.py). Gives tracks that share an artist-level bio
+# distinct text, at the cost of making name-lookup queries easier by
+# construction. Switched on at the user's request 2026-10-11; set False and
+# rerun preprocess + `encode_modality text` to compare.
+PREPEND_METADATA_TO_BIO = True
+
 # --- Retrieval ---
 DEFAULT_TOP_K = 5
+
+
+# --- Offline model loading ---
+# transformers/sentence-transformers send a network HEAD request per model
+# file on every load, even when the weights are already cached. On a flaky
+# connection those requests retry with backoff and made each query take
+# 35-60 s instead of ~25 s (measured). Once all three models are in the
+# local cache there is nothing to download, so tell the hub library to use
+# the cache only. Before the first download the cache is incomplete and
+# this stays off, so initial setup still works.
+def _all_models_cached() -> bool:
+    hub = CACHE_DIR / "huggingface" / "hub"
+    names = ["sentence-transformers/" + TEXT_MODEL_NAME, IMAGE_MODEL_NAME, AUDIO_MODEL_NAME]
+    return all(list((hub / ("models--" + n.replace("/", "--")) / "snapshots").glob("*/*")) for n in names)
+
+
+if _all_models_cached():
+    os.environ.setdefault("HF_HUB_OFFLINE", "1")

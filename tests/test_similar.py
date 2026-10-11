@@ -66,3 +66,11 @@ def test_resolve_seed_exact_unique_and_ambiguous():
         resolve_seed("alp", tracks)
     with pytest.raises(ValueError, match="no match"):
         resolve_seed("zzz", tracks)
+
+
+def test_same_label_at_k_can_score_a_subgroup_only():
+    m = unit_rows([[1, 0], [0.95, 0.05], [0, 1], [0.05, 0.95]])
+    labels = ["a", "a", "b", "x"]            # song 3's nearest neighbour (song 2) has a different label
+    assert same_genre_at_k(m, labels, 1) == 0.5
+    assert same_genre_at_k(m, labels, 1, rows=[0, 1]) == 1.0
+    assert same_genre_at_k(m, labels, 1, rows=[3]) == 0.0

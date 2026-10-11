@@ -20,11 +20,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src import config
 from src.preprocessing.clean_audio import validate_audio
 from src.preprocessing.clean_images import validate_image
-from src.preprocessing.clean_text import clean_bio, validate_text
+from src.preprocessing.clean_text import clean_bio, validate_text, with_metadata_prefix
 from src.preprocessing.records import STATUS_OK
 
 RECORD_FIELDS = ["track_id", "title", "artist", "genre", "album", "status",
-                 "audio_seconds", "bio_chars", "issues"]
+                 "audio_seconds", "bio_chars", "bio_source", "issues"]
 
 
 def process_track(row: dict) -> dict:
@@ -41,6 +41,10 @@ def process_track(row: dict) -> dict:
         issues += [f"text: {p}" for p in problems]
         if not problems:
             config.PROCESSED_TEXT_DIR.mkdir(parents=True, exist_ok=True)
+            # Length is validated on the real bio above, so the header can never
+            # make a too-short bio look acceptable.
+            if config.PREPEND_METADATA_TO_BIO:
+                bio = with_metadata_prefix(bio, row["title"], row["artist"], row["album"])
             (config.PROCESSED_TEXT_DIR / f"{tid}.txt").write_text(bio, encoding="utf-8")
     else:
         issues.append("text: missing")
@@ -56,10 +60,15 @@ def process_track(row: dict) -> dict:
     else:
         issues.append("audio: missing")
 
+    source_path = config.RAW_TEXT_DIR / f"{tid}.source"
+    # "song" / "artist" are written by ingest_catalog; the original 18 seed
+    # bios were fetched earlier by hand-checked search and have no marker.
+    bio_source = source_path.read_text(encoding="utf-8").strip() if source_path.exists() else "seed"
+
     return {
         "track_id": tid, "title": row["title"], "artist": row["artist"], "genre": row["genre"],
         "album": row["album"], "status": STATUS_OK if not issues else "flagged",
-        "audio_seconds": f"{duration:.1f}", "bio_chars": bio_chars, "issues": "; ".join(issues),
+        "audio_seconds": f"{duration:.1f}", "bio_chars": bio_chars, "bio_source": bio_source, "issues": "; ".join(issues),
     }
 
 

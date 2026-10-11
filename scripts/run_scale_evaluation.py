@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src import config
 from scripts.encode_modality import cache_path, run_encoder_subprocess
 from scripts.run_weight_sweep import weight_grid
+from src.evaluation.bootstrap import fmt_ci
 from src.evaluation.precision_at_k import precision_at_k, reciprocal_rank
 from src.preprocessing.records import load_valid_tracks
 
@@ -108,8 +109,8 @@ if __name__ == "__main__":
              f"Corpus: {len(ids)} tracks. {len(queries)} genre queries (3 phrasings x 6 genres); a hit is relevant "
              f"if the track's curated genre equals the query's genre. Metrics at k={K}. "
              f"Random-retrieval P@{K} would be about {np.mean([len(r) for r in relevant]) / len(ids):.2f}.", "",
-             f"| System | mean P@{K} | MRR |", "|---|---|---|"]
-    lines += [f"| {n} | {results[n][0].mean():.3f} | {results[n][1].mean():.3f} |" for n in systems]
+             f"| System | mean P@{K} [95% CI] | MRR [95% CI] |", "|---|---|---|"]
+    lines += [f"| {n} | {fmt_ci(results[n][0])} | {fmt_ci(results[n][1])} |" for n in systems]
     lines += ["", f"## Per-genre P@{K}", "", "| Genre | " + " | ".join(systems) + " |",
               "|---|" + "---|" * len(systems)] + per_genre_lines
     lines += ["", "## Weighted fusion (weights text, image, audio)", "",

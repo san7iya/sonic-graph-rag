@@ -101,6 +101,14 @@ out to a fresh subprocess per query for the same reason
 retry-with-backoff wraps each subprocess call to absorb the occasional
 transient allocation failure this pattern can hit under memory pressure.
 
+A query is embedded in a single such subprocess that loads the three
+encoders one after another and frees each before loading the next, so
+PyTorch is imported once rather than three times: about 7-9 s per query
+(down from about 25 s with one process per encoder, and 35-60 s when
+Hugging Face's online file checks were also retrying on a flaky
+connection). Once all three models are cached locally, the hub library is
+told to use the cache only. Peak memory stayed under 900 MB.
+
 ## Testing
 
 ```bash
@@ -132,10 +140,10 @@ full subprocess pipeline is instead exercised live by
   blind spots with the model that wrote the answer. The leaked-title check
   (does the answer name a song that was never retrieved?) is the objective
   part.
-- **Query latency is slow by design.** Each query loads the three encoders
-  one at a time in separate processes to stay within a small memory budget,
-  which takes around a minute per query. Retrieval itself (the FAISS
-  search) takes well under a millisecond.
+- **Query embedding takes several seconds.** Each query loads the three
+  encoders one after another in a fresh process to stay within a small
+  memory budget, about 7-9 s per query, plus the Gemini call. Retrieval
+  itself (the FAISS search) takes well under a millisecond.
 - **Small evaluation sets.** The hand-labelled evaluation has 14 queries
   over 18 tracks, so differences of a few hundredths in precision@k are
   within noise.

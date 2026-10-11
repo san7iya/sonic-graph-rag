@@ -23,3 +23,25 @@ def test_parse_judge_output_handles_code_fences():
 def test_parse_judge_output_rejects_garbage():
     with pytest.raises(ValueError):
         parse_judge_output("I cannot do that")
+
+
+CONTEXT = ('[1] "No Woman No Cry" by Bob Marley (genre: reggae)\nBio: Released in 1974 on the album Natty Dread, '
+           'the song was recorded in Kingston.')
+
+
+def test_supported_answer_has_no_unsupported_specifics():
+    from src.evaluation.groundedness_check import unsupported_specifics
+    answer = "No Woman No Cry by Bob Marley was released in 1974 on Natty Dread."
+    assert unsupported_specifics(answer, CONTEXT) == []
+
+
+def test_flags_invented_year_and_name():
+    from src.evaluation.groundedness_check import unsupported_specifics
+    flagged = unsupported_specifics("Bob Marley released it in 1975 with Peter Tosh in Jamaica.", CONTEXT)
+    assert "1975" in flagged and "Peter Tosh" in flagged and "Jamaica" in flagged
+    assert "Bob Marley" not in flagged
+
+
+def test_sentence_starter_words_are_not_flagged():
+    from src.evaluation.groundedness_check import unsupported_specifics
+    assert unsupported_specifics("According to the context, it is reggae.", CONTEXT) == []

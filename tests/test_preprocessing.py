@@ -76,3 +76,30 @@ def test_validate_audio_flags_short_silent_and_undecodable(tmp_path):
     garbage = tmp_path / "garbage.m4a"
     garbage.write_bytes(b"not audio at all")
     assert any("undecodable" in p for p in validate_audio(garbage)[0])
+
+
+def test_strip_edition_tags_keeps_meaningful_parentheses():
+    from src.preprocessing.clean_text import strip_edition_tags
+    assert strip_edition_tags("Rumours (Super Deluxe Edition)") == "Rumours"
+    assert strip_edition_tags("Gimme Shelter (Remastered 2019)") == "Gimme Shelter"
+    assert strip_edition_tags("Spring (The Four Seasons)") == "Spring (The Four Seasons)"
+
+
+def test_with_metadata_prefix_makes_shared_bios_distinct():
+    from src.preprocessing.clean_text import with_metadata_prefix
+    shared_bio = "Bob Marley was a Jamaican singer."
+    a = with_metadata_prefix(shared_bio, "Three Little Birds", "Bob Marley", "Exodus (Deluxe Edition)")
+    b = with_metadata_prefix(shared_bio, "No Woman No Cry", "Bob Marley", "Natty Dread")
+    assert a != b
+    assert a.startswith("Three Little Birds by Bob Marley, from the album Exodus.")
+    assert a.endswith(shared_bio)
+
+
+def test_text_hash_changes_when_bio_changes(tmp_path, monkeypatch):
+    from scripts.encode_modality import _text_hash
+    from src import config
+    monkeypatch.setattr(config, "PROCESSED_TEXT_DIR", tmp_path)
+    (tmp_path / "t.txt").write_text("first", encoding="utf-8")
+    first = _text_hash("t")
+    (tmp_path / "t.txt").write_text("second", encoding="utf-8")
+    assert _text_hash("t") != first
